@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact Us | Mokib 313</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+  /* Contact Page specific */
+  .contact-wrapper { display: grid; grid-template-columns: 1fr 1.5fr; gap: 40px; margin-bottom: 50px; }
+  .contact-info-box { background: var(--primary); color: white; padding: 40px; border-radius: 12px; }
+  .contact-info-box h3 { font-size: 24px; margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 10px; }
+  .contact-info-box p { margin-bottom: 15px; font-size: 15px; line-height: 1.6; color: #e2e8f0; display: flex; align-items: flex-start; gap: 10px; }
+  .contact-form-box { background: white; padding: 40px; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 4px 20px rgba(0,0,0,0.03); }
+  .contact-form-box h3 { font-size: 24px; margin-bottom: 20px; color: var(--primary); }
+  .form-group { margin-bottom: 20px; }
+  .form-group label { display: block; font-size: 14px; font-weight: 600; margin-bottom: 8px; color: var(--ink); }
+  .form-group input, .form-group textarea { width: 100%; padding: 12px 15px; border: 1px solid var(--border); border-radius: 8px; font-family: inherit; font-size: 15px; background: var(--bg); transition: 0.2s; }
+  .form-group input:focus, .form-group textarea:focus { outline: none; border-color: var(--primary); background: white; }
+  .form-group textarea { min-height: 120px; resize: vertical; }
+  @media(max-width:768px) { .contact-wrapper { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="top-bar">
+  <div class="container">
+    <a href="?lang=ur">اردو</a>
+    <a href="contact.html">Contact Us</a>
+    <a href="https://mokib313.com/wp-admin" target="_blank">Admin Login</a>
+  </div>
+</div>
+
+<!-- MAIN HEADER -->
+<header class="main-header">
+  <div class="container header-inner">
+    <a href="index.html" class="logo">Mokib <span>313</span></a>
+    <div class="search-bar">
+      <input type="text" placeholder="Search...">
+      <button>🔍</button>
+    </div>
+    <div class="header-icons">
+      <a href="contact.html" style="display:flex;flex-direction:column;align-items:center;font-size:11px;color:var(--primary);">👤<span>Account</span></a>
+      <a href="volunteer.html" style="display:flex;flex-direction:column;align-items:center;font-size:11px;">👥<span>Team</span></a>
+      <a href="https://mokib313.com/donate/" class="btn-donate-top">Donate Now</a>
+    </div>
+  </div>
+</header>
+
+<!-- NAVIGATION -->
+<nav class="main-nav-bar">
+  <div class="container nav-inner">
+    <a href="index.html">Home</a>
+    <a href="about.html">About Us</a>
+    <a href="intro.html">Introduction</a>
+    <a href="volunteer.html">Volunteers</a>
+    <a href="contact.html" class="active">Contact</a>
+    <a href="https://mokib313.com/karwan-e-hussaini/" target="_blank">Karwan-e-Hussaini</a>
+    <a href="https://mokib313.com/family-tree/" target="_blank">Family Tree</a>
+  </div>
+</nav>
+
+<!-- PAGE HERO -->
+<section style="background:var(--primary); padding:60px 0; text-align:center; color:white; margin-bottom:40px;">
+  <div class="container">
+    <h1 style="font-size:40px; margin-bottom:15px; font-weight:800;">Contact Mokib 313</h1>
+    <p style="font-size:16px; color:#e2e8f0; max-width:750px; margin:0 auto; line-height:1.7;">
+      Whether you want to support our mission, volunteer, ask a question or learn more about Mokib 313, our team is here to help.
+    </p>
+  </div>
+</section>
+
+<!-- CONTACT GRID -->
+<section class="container">
+  <div class="contact-wrapper">
+    
+    <!-- INFO -->
+    <div class="contact-info-box">
+      <h3>Contact Information</h3>
+      <p>📍 <span><strong>India Office:</strong><br>Nanauta Sadat, Saharanpur, UP, India</span></p>
+      <p>📍 <span><strong>Mokib Location:</strong><br>Pole 313, Najaf–Karbala Route, Iraq</span></p>
+      <p>📞 <span><strong>Phone:</strong><br><a href="tel:+919997738272" style="color:var(--accent);">+91 99977 38272</a><br><a href="tel:+96567684580" style="color:var(--accent);">+965 6768 4580</a></span></p>
+      <p>✉ <span><strong>Email:</strong><br><a href="mailto:info@mokib313.com" style="color:var(--accent);">info@mokib313.com</a></span></p>
+      
+      <div style="margin-top: 30px;">
+        <a href="https://wa.me/919997738272" target="_blank" style="display:inline-flex; align-items:center; gap:8px; background:#25D366; color:white; padding:12px 20px; border-radius:8px; font-weight:bold; text-decoration:none;">
+          💬 Chat on WhatsApp
+        </a>
+      </div>
+    </div>
+
+    <!-- FORM -->
+    <div class="contact-form-box">
+      <h3>Send Us a Message</h3>
+      <p style="font-size:14px; color:var(--ink-soft); margin-bottom:20px;">Fill in the details below. Your message will be sent directly to our WhatsApp team.</p>
+      
+      <form onsubmit="return m313SendContact(event)">
+        <div class="form-group">
+          <label>Full Name *</label>
+          <input id="m313-name" type="text" placeholder="Your full name" required>
+        </div>
+        <div class="form-group">
+          <label>Email Address *</label>
+          <input id="m313-email" type="email" placeholder="Your email address" required>
+        </div>
+        <div class="form-group">
+          <label>Subject *</label>
+          <input id="m313-subject" type="text" placeholder="What would you like to ask?" required>
+        </div>
+        <div class="form-group">
+          <label>Message *</label>
+          <textarea id="m313-message" placeholder="Write your message..." required></textarea>
+        </div>
+        <button type="submit" class="btn-primary" style="width:100%; border:none; cursor:pointer; padding:15px; font-size:16px;">Send Message via WhatsApp →</button>
+      </form>
+    </div>
+
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <h3 style="color:white; font-size:24px; margin-bottom:15px;">Mokib <span style="color:var(--accent);">313</span></h3>
+        <p style="font-size:14px; line-height:1.8; margin-bottom:20px;">A volunteer-led initiative serving the Zawwar of Imam Hussain (A.S.) during Arbaeen at Pole 313, Najaf–Karbala Road, Iraq.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="intro.html">Introduction</a></li>
+          <li><a href="volunteer.html">Volunteer</a></li>
+          <li><a href="contact.html">Contact Us</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Information</h4>
+        <ul>
+          <li><a href="https://mokib313.com/registration-page/">Official Registration</a></li>
+          <li><a href="https://mokib313.com/karwan-e-hussaini/">Karwan-e-Hussaini</a></li>
+          <li><a href="https://mokib313.com/family-tree/">Family Tree</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Contact Us</h4>
+        <ul>
+          <li>📍 Pole 313, Karbala, Iraq</li>
+          <li>📞 <a href="tel:+919997738272">+91 99977 38272</a></li>
+          <li>✉ <a href="mailto:info@mokib313.com">info@mokib313.com</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2021–2026 Mokib 313. All rights reserved.</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+function m313SendContact(event){
+  event.preventDefault();
+  const name = document.getElementById("m313-name").value.trim();
+  const email = document.getElementById("m313-email").value.trim();
+  const subject = document.getElementById("m313-subject").value.trim();
+  const message = document.getElementById("m313-message").value.trim();
+  const whatsappNumber = "96567684580";
+  const whatsappText =
+    "Mokib 313 Contact Enquiry\n\n" +
+    "Name: " + name + "\n" +
+    "Email: " + email + "\n" +
+    "Subject: " + subject + "\n\n" +
+    "Message:\n" + message;
+  const whatsappURL = "https://wa.me/" + whatsappNumber + "?text=" + encodeURIComponent(whatsappText);
+  window.open(whatsappURL, "_blank");
+  return false;
+}
+</script>
+
+</body>
+</html>

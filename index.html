@@ -3,526 +3,269 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mokib 313 | Modern Arbaeen Service</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<style>
-* { margin: 0; padding: 0; box-sizing: border-box; }
-
-:root {
-  --bg: #ffffff;
-  --bg-soft: #f1f5f9;
-  --bg-dark: #0f172a;
-  --ink: #0f172a;
-  --ink-soft: #64748b;
-  --accent: #2563eb;
-  --accent-soft: #dbeafe;
-  --accent-hover: #1d4ed8;
-  --border: #e2e8f0;
-  --radius: 20px;
-}
-
-body {
-  font-family: 'Inter', -apple-system, sans-serif;
-  color: var(--ink);
-  background: var(--bg);
-  line-height: 1.65;
-  -webkit-font-smoothing: antialiased;
-}
-
-.container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
-section { padding: 100px 0; }
-
-/* NAV */
-.nav {
-  padding: 24px 0;
-  border-bottom: 1px solid var(--border);
-  position: sticky;
-  top: 0;
-  background: rgba(255,255,255,0.95);
-  backdrop-filter: blur(10px);
-  z-index: 100;
-}
-.nav-inner { display: flex; justify-content: space-between; align-items: center; }
-.logo { font-size: 20px; font-weight: 800; color: var(--ink); letter-spacing: -0.5px; }
-.logo span { color: var(--accent); }
-.nav-links { display: flex; gap: 32px; }
-.nav-links a { color: var(--ink-soft); text-decoration: none; font-size: 15px; font-weight: 500; transition: color 0.2s; }
-.nav-links a:hover { color: var(--accent); }
-
-/* HERO — split screen, light */
-.hero { padding: 80px 0 120px; }
-.hero-grid {
-  display: grid;
-  grid-template-columns: 1.1fr 1fr;
-  gap: 60px;
-  align-items: center;
-}
-.badge {
-  display: inline-block;
-  padding: 8px 16px;
-  background: var(--accent-soft);
-  color: var(--accent);
-  border-radius: 100px;
-  font-size: 13px;
-  font-weight: 600;
-  margin-bottom: 24px;
-}
-.hero h1 {
-  font-size: clamp(40px, 5.5vw, 68px);
-  line-height: 1.05;
-  font-weight: 800;
-  letter-spacing: -2px;
-  margin-bottom: 24px;
-}
-.hero h1 em {
-  color: var(--accent);
-  font-style: normal;
-}
-.hero p {
-  font-size: 18px;
-  color: var(--ink-soft);
-  margin-bottom: 32px;
-  max-width: 520px;
-}
-.hero-buttons { display: flex; gap: 12px; flex-wrap: wrap; }
-.btn {
-  display: inline-flex;
-  align-items: center;
-  padding: 14px 28px;
-  border-radius: 12px;
-  font-weight: 600;
-  font-size: 15px;
-  text-decoration: none;
-  transition: all 0.2s;
-}
-.btn-primary { background: var(--accent); color: #fff; }
-.btn-primary:hover { background: var(--accent-hover); transform: translateY(-2px); }
-.btn-secondary { background: var(--bg-soft); color: var(--ink); }
-.btn-secondary:hover { background: var(--border); }
-.hero-visual {
-  border-radius: var(--radius);
-  overflow: hidden;
-  aspect-ratio: 4/5;
-  background: url('images/banner.png') center/cover;
-  box-shadow: 0 30px 60px -20px rgba(37, 99, 235, 0.25);
-}
-
-/* SECTION TITLES */
-.section-head { text-align: center; max-width: 700px; margin: 0 auto 64px; }
-.section-tag {
-  display: inline-block;
-  padding: 6px 14px;
-  background: var(--bg-soft);
-  color: var(--accent);
-  border-radius: 100px;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  margin-bottom: 16px;
-}
-.section-head h2 {
-  font-size: clamp(32px, 4vw, 48px);
-  font-weight: 800;
-  letter-spacing: -1.5px;
-  line-height: 1.15;
-  margin-bottom: 16px;
-}
-.section-head p { color: var(--ink-soft); font-size: 17px; }
-
-/* ABOUT */
-.about { background: var(--bg-soft); }
-.about-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 80px;
-  align-items: center;
-}
-.about-img {
-  border-radius: var(--radius);
-  aspect-ratio: 1/1;
-  background: url('images/banner.png') center/cover;
-}
-.about-content h2 {
-  font-size: clamp(32px, 3.5vw, 44px);
-  font-weight: 800;
-  letter-spacing: -1.2px;
-  line-height: 1.15;
-  margin-bottom: 24px;
-}
-.about-content p { color: var(--ink-soft); margin-bottom: 16px; }
-.about-content .btn { margin-top: 16px; }
-
-/* SERVICES — white cards on light bg */
-.services-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
-}
-.service-card {
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 32px;
-  transition: all 0.3s;
-  position: relative;
-  overflow: hidden;
-}
-.service-card:hover {
-  border-color: var(--accent);
-  transform: translateY(-6px);
-  box-shadow: 0 20px 40px -15px rgba(37, 99, 235, 0.2);
-}
-.service-icon {
-  width: 56px;
-  height: 56px;
-  border-radius: 14px;
-  background: var(--accent-soft);
-  color: var(--accent);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 24px;
-  font-weight: 800;
-  margin-bottom: 24px;
-}
-.service-card h3 {
-  font-size: 22px;
-  font-weight: 700;
-  margin-bottom: 12px;
-  letter-spacing: -0.5px;
-}
-.service-card p { color: var(--ink-soft); font-size: 15px; }
-
-/* WHY — dark section with light cards */
-.why { background: var(--bg-dark); color: #fff; }
-.why h2, .why .section-tag { color: #fff; }
-.why .section-tag { background: rgba(255,255,255,0.1); }
-.why .section-head p { color: rgba(255,255,255,0.6); }
-.why-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 20px;
-  max-width: 900px;
-  margin: 0 auto;
-}
-.why-card {
-  padding: 28px;
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,255,255,0.1);
-  border-radius: var(--radius);
-}
-.why-card h3 { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
-.why-card p { color: rgba(255,255,255,0.65); font-size: 15px; }
-
-/* STATS — big number cards */
-.stats-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
-}
-.stat-card {
-  padding: 40px 24px;
-  text-align: center;
-  border-radius: var(--radius);
-  background: var(--bg-soft);
-  transition: all 0.3s;
-}
-.stat-card:hover { background: var(--accent-soft); }
-.stat-num {
-  font-size: clamp(36px, 4vw, 52px);
-  font-weight: 800;
-  color: var(--accent);
-  letter-spacing: -2px;
-  line-height: 1;
-  margin-bottom: 8px;
-}
-.stat-label {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--ink-soft);
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-
-/* PROCESS */
-.process { background: var(--bg-soft); }
-.process-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
-}
-.step {
-  text-align: center;
-  padding: 32px 20px;
-}
-.step-num {
-  width: 64px; height: 64px;
-  background: var(--accent);
-  color: #fff;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 800;
-  font-size: 20px;
-  margin: 0 auto 20px;
-}
-.step h3 { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
-.step p { color: var(--ink-soft); font-size: 14px; }
-
-/* DONATE CTA */
-.donate {
-  background: linear-gradient(135deg, #2563eb, #7c3aed);
-  color: #fff;
-  text-align: center;
-  padding: 100px 24px;
-  border-radius: 0;
-}
-.donate h2 {
-  font-size: clamp(32px, 4vw, 52px);
-  font-weight: 800;
-  letter-spacing: -1.5px;
-  margin-bottom: 16px;
-}
-.donate p {
-  max-width: 600px;
-  margin: 0 auto 32px;
-  color: rgba(255,255,255,0.85);
-  font-size: 17px;
-}
-.donate .btn-primary {
-  background: #fff;
-  color: var(--accent);
-}
-.donate .btn-primary:hover { background: #f0f0f0; color: var(--accent); }
-
-/* VOLUNTEER */
-.volunteer-box {
-  background: var(--bg);
-  border: 2px solid var(--border);
-  border-radius: var(--radius);
-  padding: 56px;
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 32px;
-  align-items: center;
-}
-.volunteer-box h2 { font-size: clamp(28px, 3vw, 40px); font-weight: 800; letter-spacing: -1px; margin-bottom: 8px; }
-.volunteer-box p { color: var(--ink-soft); }
-
-/* FOOTER */
-footer {
-  background: var(--bg-dark);
-  color: #fff;
-  padding: 60px 0 30px;
-  text-align: center;
-}
-footer h3 { font-size: 20px; margin-bottom: 8px; }
-footer p { color: rgba(255,255,255,0.55); font-size: 14px; }
-footer .copy { margin-top: 40px; padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.1); font-size: 13px; }
-
-/* RESPONSIVE */
-@media (max-width: 900px) {
-  section { padding: 70px 0; }
-  .hero-grid, .about-grid { grid-template-columns: 1fr; gap: 40px; }
-  .hero-visual { aspect-ratio: 16/10; }
-  .services-grid { grid-template-columns: repeat(2, 1fr); }
-  .stats-grid { grid-template-columns: repeat(2, 1fr); }
-  .process-grid { grid-template-columns: repeat(2, 1fr); }
-  .why-grid { grid-template-columns: 1fr; }
-  .volunteer-box { grid-template-columns: 1fr; text-align: center; padding: 40px 24px; }
-  .nav-links { display: none; }
-}
-@media (max-width: 600px) {
-  .services-grid, .stats-grid, .process-grid { grid-template-columns: 1fr; }
-  .hero h1 { letter-spacing: -1px; }
-}
-</style>
+<title>Mokib 313 | Serving Zawwar of Imam Hussain (A.S.)</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-<!-- NAV -->
-<nav class="nav">
-  <div class="container nav-inner">
-    <div class="logo">Mokib <span>313</span></div>
-    <div class="nav-links">
-      <a href="#about">About</a>
-      <a href="#services">Services</a>
-      <a href="#stats">Impact</a>
-      <a href="#contact">Contact</a>
+<!-- TOP BAR -->
+<div class="top-bar">
+  <div class="container">
+    <a href="?lang=ur">اردو</a>
+    <a href="contact.html">Contact Us</a>
+    <a href="https://mokib313.com/wp-admin" target="_blank">Admin Login</a>
+  </div>
+</div>
+
+<!-- MAIN HEADER -->
+<header class="main-header">
+  <div class="container header-inner">
+    <a href="index.html" class="logo">Mokib <span>313</span></a>
+    
+    <div class="search-bar">
+      <input type="text" placeholder="Search services, volunteers, or info...">
+      <button>🔍</button>
     </div>
+
+    <div class="header-icons">
+      <a href="contact.html" style="display:flex;flex-direction:column;align-items:center;font-size:11px;">👤<span>Account</span></a>
+      <a href="volunteer.html" style="display:flex;flex-direction:column;align-items:center;font-size:11px;">👥<span>Team</span></a>
+      <a href="https://mokib313.com/donate/" class="btn-donate-top">Donate Now</a>
+    </div>
+  </div>
+</header>
+
+<!-- NAVIGATION -->
+<nav class="main-nav-bar">
+  <div class="container nav-inner">
+    <a href="index.html" class="active">Home</a>
+    <a href="about.html">About Us</a>
+    <a href="intro.html">Introduction</a>
+    <a href="volunteer.html">Volunteers</a>
+    <a href="contact.html">Contact</a>
+    <a href="https://mokib313.com/karwan-e-hussaini/" target="_blank">Karwan-e-Hussaini</a>
+    <a href="https://mokib313.com/family-tree/" target="_blank">Family Tree</a>
   </div>
 </nav>
 
-<!-- HERO -->
-<section class="hero">
-  <div class="container hero-grid">
-    <div>
-      <span class="badge">● Arbaeen Service · Pole 313</span>
-      <h1>Serving the <em>Zawwar</em> of Imam Hussain (A.S.)</h1>
-      <p>A volunteer-driven, donation-supported initiative serving visitors on the Najaf–Karbala route with water, tea, snacks, fruits, WiFi and mobile charging.</p>
-      <div class="hero-buttons">
-        <a href="/donate/" class="btn btn-primary">Support Mokib 313 →</a>
-        <a href="https://chat.whatsapp.com/KvwkDYS3rE36P1GYRbOz0t" class="btn btn-secondary" target="_blank">Join as Volunteer</a>
+<!-- HERO SECTION -->
+<section class="container">
+  <div class="hero">
+    <div class="hero-content">
+      <h1>Serving the Zawwar... Under One Roof</h1>
+      <p>A volunteer-driven, donation-supported initiative providing water, tea, snacks, fruits, WiFi and support at Pole 313, Najaf–Karbala Route, Iraq.</p>
+      <a href="about.html" class="btn-primary">Discover Our Mission →</a>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 1: 3 ACTION CARDS -->
+<section class="container">
+  <h2 class="section-title">How would you like to start?</h2>
+  <div class="action-cards">
+    
+    <div class="action-card">
+      <div class="action-card-img" style="background: url('images/water.jpeg') center/cover;">
+        <div style="background:rgba(30,58,138,0.7); width:100%; height:100%; display:flex; align-items:center; justify-content:center; font-size:24px;">💧</div>
+      </div>
+      <div class="action-card-body">
+        <h3>Our Services</h3>
+        <p>Explore the refreshments, water, and support services we provide to the pilgrims.</p>
+        <a href="#services" class="btn-outline">Explore Services</a>
       </div>
     </div>
-    <div class="hero-visual"></div>
+
+    <div class="action-card">
+      <div class="action-card-img" style="background: url('images/tea.jpeg') center/cover;">
+        <div style="background:rgba(249,115,22,0.7); width:100%; height:100%; display:flex; align-items:center; justify-content:center; font-size:24px;">☕</div>
+      </div>
+      <div class="action-card-body">
+        <h3>Become a Volunteer</h3>
+        <p>Join our dedicated team and serve the Zawwar of Imam Hussain (A.S.) with sincerity.</p>
+        <a href="volunteer.html" class="btn-outline" style="border-color:var(--accent); color:var(--accent);">Join Team</a>
+      </div>
+    </div>
+
+    <div class="action-card">
+      <div class="action-card-img" style="background: url('images/banner.png') center/cover;">
+        <div style="background:rgba(30,58,138,0.7); width:100%; height:100%; display:flex; align-items:center; justify-content:center; font-size:24px;">❤️</div>
+      </div>
+      <div class="action-card-body">
+        <h3>Support Our Mission</h3>
+        <p>Your donations help us arrange water, food, and essential services for the Zawwar.</p>
+        <a href="https://mokib313.com/donate/" class="btn-outline">Donate Now</a>
+      </div>
+    </div>
+
   </div>
 </section>
 
-<!-- ABOUT -->
-<section class="about" id="about">
-  <div class="container about-grid">
-    <div class="about-img"></div>
-    <div class="about-content">
-      <span class="section-tag">About Us</span>
-      <h2>Service with sincerity, unity &amp; devotion</h2>
-      <p>Mokib 313 is a volunteer-based initiative established to serve the Zawwar of Imam Hussain (A.S.) during the Arbaeen journey.</p>
-      <p>Located at Pole 313 on the Najaf–Karbala route, our volunteers provide essential services — from drinking water and Indian masala tea to refreshments, fruits, snacks, WiFi and mobile charging.</p>
-      <a href="/about/" class="btn btn-primary">Learn More →</a>
+<!-- SECTION 2: STATS (Why Mokib) -->
+<section class="container">
+  <h2 class="section-title">Why Mokib 313?</h2>
+  <div class="stats-box">
+    <div class="stat-item">
+      <div class="stat-icon">👑</div>
+      <div class="stat-number">100%</div>
+      <div class="stat-label">Sincere Service</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-icon">👥</div>
+      <div class="stat-number">16+</div>
+      <div class="stat-label">Volunteers</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-icon">💰</div>
+      <div class="stat-number">200+</div>
+      <div class="stat-label">Donations</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-icon">📍</div>
+      <div class="stat-number">313</div>
+      <div class="stat-label">Pole Number</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-icon">📅</div>
+      <div class="stat-number">2021</div>
+      <div class="stat-label">Established</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-icon">🛡️</div>
+      <div class="stat-number">24/7</div>
+      <div class="stat-label">Service during Arbaeen</div>
     </div>
   </div>
 </section>
 
-<!-- SERVICES -->
-<section id="services">
-  <div class="container">
-    <div class="section-head">
-      <span class="section-tag">Our Services</span>
-      <h2>Serving the Zawwar along the journey</h2>
-      <p>Practical support and refreshments during the Arbaeen journey.</p>
+<!-- SECTION 3: 2 PROMO BANNERS -->
+<section class="container">
+  <div class="promo-banners">
+    
+    <div class="promo-banner promo-1">
+      <h3>VOLUNTEER TEAM</h3>
+      <p>Join a team united by service, sincerity, and devotion. Help make their journey easier.</p>
+      <a href="volunteer.html" class="btn-white">Meet Volunteers</a>
     </div>
-    <div class="services-grid">
-      <div class="service-card">
-        <div class="service-icon">01</div>
+
+    <div class="promo-banner promo-2">
+      <h3>DONATION & SUPPORT</h3>
+      <p>Every contribution helps us arrange water, tea, food, and fruits for pilgrims during Arbaeen.</p>
+      <a href="https://mokib313.com/donate/" class="btn-white">Donate Now</a>
+    </div>
+
+  </div>
+</section>
+
+<!-- SECTION 4: SERVICES GRID -->
+<section class="container" id="services">
+  <h2 class="section-title">Our Services</h2>
+  <div class="services-grid">
+    
+    <div class="service-card">
+      <div class="service-badge">NEW</div>
+      <div class="service-img" style="background:url('images/water.jpeg') center/cover;"></div>
+      <div class="service-info">
         <h3>Drinking Water</h3>
-        <p>Sealed drinking-water cups for Zawwar throughout the service period.</p>
+        <p>Sealed drinking-water cups distributed to Zawwar throughout the service period.</p>
+        <a href="about.html" class="service-btn">View Details</a>
       </div>
-      <div class="service-card">
-        <div class="service-icon">02</div>
+    </div>
+
+    <div class="service-card">
+      <div class="service-badge">NEW</div>
+      <div class="service-img" style="background:url('images/tea.jpeg') center/cover;"></div>
+      <div class="service-info">
         <h3>Indian Masala Tea</h3>
-        <p>Hot Indian masala tea served with warmth and hospitality.</p>
+        <p>Hot Indian masala tea served with warmth and hospitality to pilgrims.</p>
+        <a href="about.html" class="service-btn">View Details</a>
       </div>
-      <div class="service-card">
-        <div class="service-icon">03</div>
-        <h3>Juice &amp; Refreshments</h3>
-        <p>Refreshing drinks and cold refreshments during the journey.</p>
+    </div>
+
+    <div class="service-card">
+      <div class="service-badge">NEW</div>
+      <div class="service-img" style="background:url('images/juice.jpeg') center/cover;"></div>
+      <div class="service-info">
+        <h3>Juice & Cold Refreshments</h3>
+        <p>Providing refreshing drinks and cold refreshments during the journey.</p>
+        <a href="about.html" class="service-btn">View Details</a>
       </div>
-      <div class="service-card">
-        <div class="service-icon">04</div>
-        <h3>Snacks &amp; Light Food</h3>
-        <p>Fries, chips, croissants and light snacks for pilgrims.</p>
+    </div>
+
+    <div class="service-card">
+      <div class="service-badge">NEW</div>
+      <div class="service-img" style="background:url('images/snacks.jpeg') center/cover;"></div>
+      <div class="service-info">
+        <h3>Snacks & Light Food</h3>
+        <p>Serving light snacks and refreshments such as fries, chips, croissants.</p>
+        <a href="about.html" class="service-btn">View Details</a>
       </div>
-      <div class="service-card">
-        <div class="service-icon">05</div>
+    </div>
+
+    <div class="service-card">
+      <div class="service-badge">NEW</div>
+      <div class="service-img" style="background:url('images/fruits.jpeg') center/cover;"></div>
+      <div class="service-info">
         <h3>Fresh Fruits</h3>
-        <p>Fresh fruits distributed for refreshment and support.</p>
-      </div>
-      <div class="service-card">
-        <div class="service-icon">06</div>
-        <h3>WiFi &amp; Charging</h3>
-        <p>Helping pilgrims stay connected with WiFi and mobile charging.</p>
+        <p>Distributing fresh fruits to provide refreshment and support to Zawwar.</p>
+        <a href="about.html" class="service-btn">View Details</a>
       </div>
     </div>
-  </div>
-</section>
 
-<!-- WHY -->
-<section class="why">
-  <div class="container">
-    <div class="section-head">
-      <span class="section-tag">Why Mokib 313</span>
-      <h2>A small service with a big purpose</h2>
-      <p>Volunteers united with one goal — serving Zawwar with sincerity and care.</p>
-    </div>
-    <div class="why-grid">
-      <div class="why-card">
-        <h3>Volunteer Driven</h3>
-        <p>Operations supported by dedicated volunteers from different cities.</p>
-      </div>
-      <div class="why-card">
-        <h3>Service Focused</h3>
-        <p>Every activity is planned around the needs of the Zawwar.</p>
-      </div>
-      <div class="why-card">
-        <h3>Community Supported</h3>
-        <p>Public donations fund the service activities of Mokib 313.</p>
-      </div>
-      <div class="why-card">
-        <h3>Transparency</h3>
-        <p>Donation and expenditure information maintained through our system.</p>
+    <div class="service-card">
+      <div class="service-badge">NEW</div>
+      <div class="service-img" style="background:url('images/wifi.jpeg') center/cover;"></div>
+      <div class="service-info">
+        <h3>WiFi & Mobile Charging</h3>
+        <p>Helping pilgrims stay connected with WiFi and mobile charging facilities.</p>
+        <a href="about.html" class="service-btn">View Details</a>
       </div>
     </div>
-  </div>
-</section>
 
-<!-- STATS -->
-<section id="stats">
-  <div class="container">
-    <div class="section-head">
-      <span class="section-tag">Our Impact</span>
-      <h2>Growing through service</h2>
-      <p>A growing team united by the purpose of serving the Zawwar.</p>
-    </div>
-    <div class="stats-grid">
-      <div class="stat-card"><div class="stat-num">16+</div><div class="stat-label">Volunteers</div></div>
-      <div class="stat-card"><div class="stat-num">166+</div><div class="stat-label">Donations</div></div>
-      <div class="stat-card"><div class="stat-num">313</div><div class="stat-label">Pole Number</div></div>
-      <div class="stat-card"><div class="stat-num">2021</div><div class="stat-label">Established</div></div>
-    </div>
-  </div>
-</section>
-
-<!-- PROCESS -->
-<section class="process">
-  <div class="container">
-    <div class="section-head">
-      <span class="section-tag">How We Work</span>
-      <h2>From support to service</h2>
-      <p>Our volunteer-driven model connects donations, planning and service.</p>
-    </div>
-    <div class="process-grid">
-      <div class="step"><div class="step-num">01</div><h3>Support</h3><p>Public donations help support the service activities.</p></div>
-      <div class="step"><div class="step-num">02</div><h3>Planning</h3><p>Team plans supplies, logistics and volunteer roles.</p></div>
-      <div class="step"><div class="step-num">03</div><h3>Volunteers</h3><p>Volunteers work together from different cities.</p></div>
-      <div class="step"><div class="step-num">04</div><h3>Service</h3><p>Together we serve the Zawwar with sincerity.</p></div>
-    </div>
-  </div>
-</section>
-
-<!-- DONATE -->
-<section class="donate" id="donate">
-  <h2>Your support helps us serve more Zawwar</h2>
-  <p>Every contribution helps arrange water, refreshments, food, fruits and essential services for pilgrims during Arbaeen.</p>
-  <a href="https://wa.me/96567684580" class="btn btn-primary" target="_blank">Donate / Support Mokib 313 →</a>
-</section>
-
-<!-- VOLUNTEER -->
-<section>
-  <div class="container">
-    <div class="volunteer-box">
-      <div>
-        <h2>Become a Mokib 313 Volunteer</h2>
-        <p>Join a team united by service, sincerity and devotion to the Zawwar.</p>
-      </div>
-      <div>
-        <a href="https://chat.whatsapp.com/KvwkDYS3rE36P1GYRbOz0t" class="btn btn-primary" target="_blank">Join Volunteer Team →</a>
-      </div>
-    </div>
   </div>
 </section>
 
 <!-- FOOTER -->
-<footer id="contact">
+<footer class="site-footer">
   <div class="container">
-    <h3>Mokib 313</h3>
-    <p>Pole 313 · Najaf–Karbala Route · Iraq</p>
-    <p style="margin-top:20px">
-      <a href="https://wa.me/96567684580" style="color:#60a5fa;text-decoration:none">WhatsApp</a> ·
-      <a href="mailto:info@mokib313.com" style="color:#60a5fa;text-decoration:none;margin-left:8px">Email</a>
-    </p>
-    <div class="copy">© 2021–2026 Mokib 313 · Serving the Zawwar with love</div>
+    <div class="footer-grid">
+      <div class="footer-col">
+        <h3 style="color:white; font-size:24px; margin-bottom:15px;">Mokib <span style="color:var(--accent);">313</span></h3>
+        <p style="font-size:14px; line-height:1.8; margin-bottom:20px;">A volunteer-led initiative serving the Zawwar of Imam Hussain (A.S.) during Arbaeen at Pole 313, Najaf–Karbala Road, Iraq.</p>
+        <p style="font-size:14px;"><strong>India Office:</strong><br>Nanauta Sadat, Saharanpur, UP, India</p>
+      </div>
+      <div class="footer-col">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="intro.html">Introduction</a></li>
+          <li><a href="volunteer.html">Volunteer</a></li>
+          <li><a href="contact.html">Contact Us</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Information</h4>
+        <ul>
+          <li><a href="https://mokib313.com/registration-page/">Official Registration</a></li>
+          <li><a href="https://mokib313.com/karwan-e-hussaini/">Karwan-e-Hussaini</a></li>
+          <li><a href="https://mokib313.com/pilgrimage-application/">Pilgrimage App</a></li>
+          <li><a href="https://mokib313.com/family-tree/">Family Tree</a></li>
+          <li><a href="https://mokib313.com/donation-search/">Check Donation</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Contact Us</h4>
+        <ul>
+          <li>📍 Pole 313, Karbala, Iraq</li>
+          <li>📞 <a href="tel:+919997738272">+91 99977 38272</a></li>
+          <li>✉ <a href="mailto:info@mokib313.com">info@mokib313.com</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2021–2026 Mokib 313. All rights reserved. | Serving the Zawwar with Love.</p>
+    </div>
   </div>
 </footer>
 
