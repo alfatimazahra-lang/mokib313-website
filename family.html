@@ -7,29 +7,70 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
 <style>
-  /* वंशावली चेन के लिए स्टाइल */
   .lineage-container { max-width: 800px; margin: 40px auto; background: white; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); border: 1px solid var(--border); padding: 40px 20px; }
-  .lineage-title { text-align: center; color: var(--primary); font-size: 32px; margin-bottom: 40px; font-weight: 800; }
+  .lineage-title { text-align: center; color: var(--primary); font-size: 32px; margin-bottom: 15px; font-weight: 800; }
+  .subtitle { text-align: center; color: var(--ink-soft); margin-bottom: 30px; }
 
-  .lineage-list { list-style: none; padding: 0; margin: 0; position: relative; }
-  .lineage-list::before { content: ""; position: absolute; top: 0; bottom: 0; left: 30px; width: 4px; background: var(--accent-soft); border-radius: 2px; }
+  /* Search */
+  .search-wrap { position: relative; margin-bottom: 20px; }
+  .search-wrap input { width: 100%; box-sizing: border-box; padding: 15px 20px; font-size: 16px; border: 2px solid var(--border); border-radius: 10px; font-family: inherit; outline: none; transition: 0.2s; }
+  .search-wrap input:focus { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(30,58,138,0.1); }
 
-  .lineage-item { position: relative; padding-left: 80px; margin-bottom: 30px; }
-  .lineage-item:last-child { margin-bottom: 0; }
+  .search-results { max-height: 420px; overflow-y: auto; border: 1px solid var(--border); border-radius: 10px; margin-top: 10px; background: white; }
+  .search-result { padding: 14px 18px; cursor: pointer; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; gap: 12px; transition: 0.15s; }
+  .search-result:last-child { border-bottom: none; }
+  .search-result:hover { background: var(--bg-soft); }
+  .search-result-name { font-weight: 600; color: var(--ink); flex: 1; line-height: 1.5; }
+  .search-result-gen { font-size: 12px; background: var(--accent-soft); color: var(--primary); padding: 4px 12px; border-radius: 20px; white-space: nowrap; font-weight: 600; }
 
-  /* गोल डॉट (नोड) */
-  .lineage-dot { position: absolute; left: 12px; top: 10px; width: 40px; height: 40px; border-radius: 50%; background: white; border: 4px solid var(--primary); display: flex; align-items: center; justify-content: center; font-weight: bold; color: var(--primary); z-index: 2; }
+  .empty-state { text-align: center; padding: 30px 20px; color: var(--ink-soft); }
 
-  /* नाम का कार्ड */
-  .lineage-card { background: var(--bg-soft); padding: 20px 25px; border-radius: 10px; border: 1px solid var(--border); transition: 0.3s; }
-  .lineage-card:hover { transform: translateX(5px); border-color: var(--primary); box-shadow: 0 4px 15px rgba(30,58,138,0.1); }
-  .lineage-name { font-size: 20px; font-weight: 700; color: var(--ink); margin-bottom: 5px; }
-  .lineage-gen { display: inline-block; background: var(--accent); color: white; padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: bold; }
+  .quick-chips { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
+  .quick-chip { background: var(--bg-soft); padding: 8px 15px; border-radius: 20px; border: 1px solid var(--border); font-size: 14px; cursor: pointer; transition: 0.2s; color: var(--ink); }
+  .quick-chip:hover { background: var(--accent-soft); border-color: var(--primary); color: var(--primary); }
+
+  /* Detail view */
+  .detail-view { padding-top: 5px; }
+  .back-btn { background: none; border: none; color: var(--primary); cursor: pointer; font-size: 15px; font-weight: 600; padding: 0; margin-bottom: 20px; font-family: inherit; }
+  .back-btn:hover { text-decoration: underline; }
+
+  .person-card { background: linear-gradient(135deg, #1e3a8a, #3b5bdb); color: white; padding: 30px 25px; border-radius: 12px; margin-bottom: 25px; }
+  .person-card h2 { margin: 0 0 8px; font-size: 22px; line-height: 1.4; font-weight: 700; }
+  .person-card .urdu-name { opacity: 0.95; margin-bottom: 12px; font-size: 18px; line-height: 1.8; direction: rtl; }
+  .person-card .meta { opacity: 0.85; font-size: 14px; margin-bottom: 12px; }
+  .gen-badge { display: inline-block; background: rgba(255,255,255,0.22); padding: 5px 14px; border-radius: 20px; font-size: 13px; font-weight: 600; }
+
+  .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin-bottom: 25px; }
+  .info-item { background: var(--bg-soft); padding: 14px 16px; border-radius: 8px; border: 1px solid var(--border); }
+  .info-label { font-size: 11px; color: var(--ink-soft); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 5px; font-weight: 700; }
+  .info-value { font-size: 14px; color: var(--ink); font-weight: 500; line-height: 1.6; }
+
+  .section-title { font-size: 17px; font-weight: 700; color: var(--primary); margin: 28px 0 18px; padding-bottom: 8px; border-bottom: 2px solid var(--accent-soft); }
+
+  /* Ancestral chain */
+  .chain-list { list-style: none; padding: 0; margin: 0; position: relative; }
+  .chain-list::before { content: ""; position: absolute; top: 8px; bottom: 8px; left: 15px; width: 2px; background: var(--accent-soft); }
+  .chain-item { position: relative; padding-left: 45px; padding-bottom: 18px; }
+  .chain-item:last-child { padding-bottom: 0; }
+  .chain-dot { position: absolute; left: 5px; top: 4px; width: 20px; height: 20px; border-radius: 50%; background: white; border: 3px solid var(--primary); z-index: 2; }
+  .chain-item.current .chain-dot { background: var(--primary); box-shadow: 0 0 0 4px rgba(30,58,138,0.2); }
+  .chain-name { font-weight: 600; color: var(--ink); cursor: pointer; font-size: 15px; line-height: 1.4; }
+  .chain-name:hover { color: var(--primary); }
+  .chain-name .urdu-small { font-weight: 400; color: var(--ink-soft); font-size: 13px; direction: rtl; margin-top: 2px; }
+  .chain-gen { font-size: 12px; color: var(--ink-soft); margin-top: 3px; }
+
+  .children-list { display: flex; flex-wrap: wrap; gap: 10px; }
+  .child-chip { background: var(--bg-soft); padding: 8px 14px; border-radius: 20px; border: 1px solid var(--border); font-size: 14px; cursor: pointer; transition: 0.2s; color: var(--ink); }
+  .child-chip:hover { background: var(--accent-soft); border-color: var(--primary); color: var(--primary); }
+  .child-chip small { color: var(--ink-soft); }
+
+  .loading { text-align: center; padding: 40px; color: var(--ink-soft); }
+  .error-box { text-align: center; padding: 30px 20px; color: #b91c1c; background: #fef2f2; border: 1px solid #fecaca; border-radius: 10px; }
+  .error-box small { color: #7f1d1d; }
 </style>
 </head>
 <body>
 
-<!-- हेडर (JAS स्टाइल) -->
 <div class="top-bar"><div class="container"><a href="?lang=ur">اردو</a><a href="contact.html">Contact Us</a></div></div>
 <header class="main-header"><div class="container header-inner"><a href="index.html" class="logo">Mokib <span>313</span></a><div class="search-bar"><input type="text" placeholder="Search..."><button>🔍</button></div><div class="header-icons"><a href="https://mokib313.com/donate/" class="btn-donate-top">Donate Now</a></div></div></header>
 <nav class="main-nav-bar"><div class="container nav-inner"><a href="index.html">Home</a><a href="about.html">About Us</a><a href="intro.html">Introduction</a><a href="volunteer.html">Volunteers</a><a href="contact.html">Contact</a><a href="family.html" class="active">Family Lineage</a></nav>
@@ -37,132 +78,295 @@
 <section class="container">
   <div class="lineage-container">
     <h1 class="lineage-title">Nanauta Sadat Lineage</h1>
-    <p style="text-align:center; color:var(--ink-soft); margin-bottom:40px;">From Hazrat Ali (A.S.) to Syed Sardar Ghazi</p>
+    <p class="subtitle">Search any name to view their lineage</p>
 
-    <ul class="lineage-list" id="lineageList">
-      <p style="text-align:center; padding:20px;">डेटा लोड हो रहा है...</p>
-    </ul>
+    <div id="searchSection">
+      <div class="search-wrap">
+        <input type="text" id="searchInput" placeholder="नाम खोजें / Search name…" autocomplete="off">
+        <div id="searchResults" class="search-results" style="display:none;"></div>
+      </div>
+      <div class="quick-chips" id="quickChips"></div>
+    </div>
+
+    <div id="detailView" class="detail-view" style="display:none;"></div>
+
+    <div id="statusBox" class="loading">डेटा लोड हो रहा है…</div>
   </div>
 </section>
 
 <footer class="site-footer"><div class="container"><div class="footer-bottom" style="border:none;"><p>© 2021–2026 Mokib 313. All rights reserved.</p></div></div></footer>
 
 <script>
-/* ============================================================
-   family.json को किसी भी format से पढ़ने वाला helper
-   Support:
-   1) [ {...}, {...} ]                        → सीधा persons array
-   2) {"family_json": "[...]"}                → wrapped object
-   3) [{"family_json": "[...]"}]              → wrapped in array
-   4) phpMyAdmin export: [header, database, {type:"table", data:[...]}]
-   5) {"data": [...]}                         → object with data key
-   ============================================================ */
+/* ---------- helpers ---------- */
+function escapeHtml(s) {
+  if (s == null) return '';
+  return String(s).replace(/[&<>"']/g, c => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  }[c]));
+}
+function splitName(fullName) {
+  if (!fullName) return { en: '', ur: '' };
+  const m = String(fullName).match(/^(.*?)\s*[—–]\s*(.+)$/);
+  if (m) return { en: m[1].trim(), ur: m[2].trim() };
+  return { en: String(fullName).trim(), ur: '' };
+}
+function numOrNull(x) {
+  const n = Number(x);
+  return isNaN(n) ? null : n;
+}
+
+/* ---------- JSON parsing (phpMyAdmin-safe) ---------- */
 function extractPeople(raw) {
   let data = raw;
 
-  // (2) {"family_json": "..."}
   if (data && data.family_json) {
     data = typeof data.family_json === 'string'
-      ? JSON.parse(data.family_json)
-      : data.family_json;
+      ? JSON.parse(data.family_json) : data.family_json;
   }
-
-  // (3) [{ "family_json": "..." }]
   if (Array.isArray(data) && data.length === 1 && data[0] && data[0].family_json) {
     data = typeof data[0].family_json === 'string'
-      ? JSON.parse(data[0].family_json)
-      : data[0].family_json;
+      ? JSON.parse(data[0].family_json) : data[0].family_json;
   }
-
-  // (4) phpMyAdmin export → table.data
   if (Array.isArray(data)) {
-    const tableObj = data.find(x => x && x.type === 'table' && Array.isArray(x.data));
-    if (tableObj) data = tableObj.data;
+    const t = data.find(x => x && x.type === 'table' && Array.isArray(x.data));
+    if (t) data = t.data;
   }
+  if (data && Array.isArray(data.data)) data = data.data;
 
-  // (5) {data: [...]}
-  if (data && Array.isArray(data.data)) {
-    data = data.data;
-  }
-
-  if (!Array.isArray(data)) {
-    throw new Error("Persons array नहीं मिला (format अजीब है)");
-  }
-
-  // साफ-सुथरा normalize
-  return data
-    .filter(p => p && (p.full_name || p.name))
-    .map(p => ({
-      ...p,
-      gen: p.gen ?? p.generation_number ?? p.generation ?? '?',
-      name: p.name ?? p.full_name ?? ''
-    }));
+  if (!Array.isArray(data)) throw new Error("Persons array नहीं मिला");
+  return data.filter(p => p && (p.full_name || p.name));
 }
 
-/* ============================
-   डेटा लोड करें और render करें
-   ============================ */
-fetch('family.json', { cache: 'no-store' })
-  .then(response => {
-    if (!response.ok) {
-      throw new Error("family.json नहीं मिली — HTTP " + response.status);
+/* ---------- global state ---------- */
+let ALL = [];          // all persons
+let BY_ID = {};        // id -> person
+let BY_FATHER = {};    // father_id -> [children]
+
+function buildIndex() {
+  BY_ID = {};
+  BY_FATHER = {};
+  ALL.forEach(p => {
+    const id = String(p.id);
+    BY_ID[id] = p;
+    if (p.father_id != null) {
+      const f = String(p.father_id);
+      (BY_FATHER[f] = BY_FATHER[f] || []).push(p);
     }
-    return response.text(); // पहले text लें ताकि पार्स एरर पकड़ सकें
+  });
+}
+
+function getAncestors(p) {
+  const chain = [];
+  const seen = new Set();
+  let cur = p;
+  while (cur && !seen.has(String(cur.id))) {
+    seen.add(String(cur.id));
+    chain.push(cur);
+    cur = cur.father_id != null ? BY_ID[String(cur.father_id)] : null;
+  }
+  return chain.reverse();
+}
+function getChildren(p) {
+  return BY_FATHER[String(p.id)] || [];
+}
+
+/* ---------- search UI ---------- */
+const searchInput = document.getElementById('searchInput');
+const searchResults = document.getElementById('searchResults');
+const quickChips = document.getElementById('quickChips');
+const searchSection = document.getElementById('searchSection');
+const detailView = document.getElementById('detailView');
+const statusBox = document.getElementById('statusBox');
+
+function doSearch(query) {
+  const q = query.toLowerCase().trim();
+  if (!q) { searchResults.style.display = 'none'; return; }
+
+  const matches = ALL.filter(p => {
+    const name = String(p.full_name || p.name || '').toLowerCase();
+    return name.includes(q);
+  }).slice(0, 40);
+
+  if (!matches.length) {
+    searchResults.innerHTML = `<div class="empty-state">कोई परिणाम नहीं मिला</div>`;
+    searchResults.style.display = 'block';
+    return;
+  }
+
+  searchResults.innerHTML = matches.map(p => {
+    const { en, ur } = splitName(p.full_name || p.name || '');
+    return `
+      <div class="search-result" data-id="${escapeHtml(p.id)}">
+        <div class="search-result-name">
+          ${escapeHtml(en)}
+          ${ur ? `<br><small style="color:var(--ink-soft);font-weight:400;">${escapeHtml(ur)}</small>` : ''}
+        </div>
+        <span class="search-result-gen">Gen ${escapeHtml(p.generation_number || '?')}</span>
+      </div>`;
+  }).join('');
+
+  searchResults.style.display = 'block';
+
+  searchResults.querySelectorAll('.search-result').forEach(el => {
+    el.addEventListener('click', () => showPerson(el.getAttribute('data-id')));
+  });
+}
+
+let searchTimer;
+searchInput.addEventListener('input', e => {
+  clearTimeout(searchTimer);
+  searchTimer = setTimeout(() => doSearch(e.target.value), 180);
+});
+searchInput.addEventListener('keydown', e => {
+  if (e.key === 'Enter') {
+    const first = searchResults.querySelector('.search-result');
+    if (first) first.click();
+  }
+});
+
+/* ---------- detail view ---------- */
+function showPerson(id) {
+  const p = BY_ID[String(id)];
+  if (!p) return;
+
+  searchSection.style.display = 'none';
+  statusBox.style.display = 'none';
+  detailView.style.display = 'block';
+  searchResults.style.display = 'none';
+
+  const { en, ur } = splitName(p.full_name || p.name || '');
+  const ancestors = getAncestors(p);
+  const children = getChildren(p);
+
+  const info = [];
+  if (p.father_name) info.push(['Father', p.father_name]);
+  if (p.grandfather_name) info.push(['Grandfather', p.grandfather_name]);
+  if (p.mother_name) info.push(['Mother', p.mother_name]);
+  if (p.wife_name) info.push(['Wife', p.wife_name]);
+  if (p.husband_name) info.push(['Husband', p.husband_name]);
+  if (p.birth_date) info.push(['Birth', p.birth_date]);
+  if (p.death_date) info.push(['Death', p.death_date]);
+  if (p.martyrdom_date) info.push(['Martyrdom', p.martyrdom_date]);
+  if (p.birthplace) info.push(['Birthplace', p.birthplace]);
+  if (p.burial_place) info.push(['Burial', p.burial_place]);
+  if (p.residence) info.push(['Residence', p.residence]);
+  if (p.Education) info.push(['Education', p.Education]);
+  if (p.title_en) info.push(['Title', p.title_en]);
+  if (p.description) info.push(['Note', p.description]);
+
+  detailView.innerHTML = `
+    <button class="back-btn" id="backBtn">← वापस खोजें / Back to search</button>
+
+    <div class="person-card">
+      <h2>${escapeHtml(en)}</h2>
+      ${ur ? `<div class="urdu-name">${escapeHtml(ur)}</div>` : ''}
+      <div class="meta">
+        ${p.life_status ? escapeHtml(p.life_status) : ''}
+        ${p.relation_type ? ' • ' + escapeHtml(p.relation_type) : ''}
+      </div>
+      <span class="gen-badge">Generation ${escapeHtml(p.generation_number || '?')}</span>
+    </div>
+
+    ${info.length ? `
+      <div class="info-grid">
+        ${info.map(([k, v]) => `
+          <div class="info-item">
+            <div class="info-label">${escapeHtml(k)}</div>
+            <div class="info-value">${escapeHtml(v)}</div>
+          </div>`).join('')}
+      </div>` : ''}
+
+    ${ancestors.length > 1 ? `
+      <h3 class="section-title">वंशावली / Lineage Chain</h3>
+      <ul class="chain-list">
+        ${ancestors.map(a => {
+          const isCur = String(a.id) === String(p.id);
+          const { en: aEn, ur: aUr } = splitName(a.full_name || '');
+          return `
+            <li class="chain-item ${isCur ? 'current' : ''}">
+              <div class="chain-dot"></div>
+              <div class="chain-name" data-nav-id="${escapeHtml(a.id)}">
+                ${escapeHtml(aEn)}
+                ${aUr ? `<div class="urdu-small">${escapeHtml(aUr)}</div>` : ''}
+                <div class="chain-gen">Gen ${escapeHtml(a.generation_number || '?')}${isCur ? ' · current' : ''}</div>
+              </div>
+            </li>`;
+        }).join('')}
+      </ul>` : ''}
+
+    ${children.length ? `
+      <h3 class="section-title">संतान / Children (${children.length})</h3>
+      <div class="children-list">
+        ${children.map(c => {
+          const { en: cEn } = splitName(c.full_name || '');
+          return `<div class="child-chip" data-nav-id="${escapeHtml(c.id)}">${escapeHtml(cEn)} <small>· Gen ${escapeHtml(c.generation_number || '?')}</small></div>`;
+        }).join('')}
+      </div>` : ''}
+  `;
+
+  detailView.querySelectorAll('[data-nav-id]').forEach(el => {
+    el.addEventListener('click', () => showPerson(el.getAttribute('data-nav-id')));
+  });
+  document.getElementById('backBtn').addEventListener('click', () => {
+    detailView.style.display = 'none';
+    searchSection.style.display = 'block';
+    statusBox.style.display = 'none';
+    searchInput.focus();
+  });
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/* ---------- load ---------- */
+fetch('family.json', { cache: 'no-store' })
+  .then(r => {
+    if (!r.ok) throw new Error("family.json नहीं मिली (HTTP " + r.status + ")");
+    return r.text();
   })
   .then(text => {
     let raw;
-    try {
-      raw = JSON.parse(text);
-    } catch (e) {
-      throw new Error("JSON invalid है: " + e.message);
-    }
+    try { raw = JSON.parse(text); }
+    catch (e) { throw new Error("JSON invalid है: " + e.message); }
 
-    const data = extractPeople(raw);
+    ALL = extractPeople(raw);
 
-    // generation के हिसाब से sort (Hazrat Ali सबसे ऊपर)
-    data.sort((a, b) => {
-      const ga = Number(a.gen);
-      const gb = Number(b.gen);
-      if (isNaN(ga) && isNaN(gb)) return 0;
-      if (isNaN(ga)) return 1;
-      if (isNaN(gb)) return -1;
+    // generation के हिसाब से sort (fallback search order)
+    ALL.sort((a, b) => {
+      const ga = numOrNull(a.generation_number ?? a.gen) ?? 9999;
+      const gb = numOrNull(b.generation_number ?? b.gen) ?? 9999;
       return ga - gb;
     });
 
-    const list = document.getElementById('lineageList');
-    list.innerHTML = '';
+    buildIndex();
 
-    if (data.length === 0) {
-      list.innerHTML = "<p style='text-align:center;color:red;'>कोई डेटा नहीं मिला।</p>";
-      return;
-    }
+    statusBox.style.display = 'none';
+    searchSection.style.display = 'block';
 
-    data.forEach(person => {
-      const li = document.createElement('li');
-      li.className = 'lineage-item';
-
-      li.innerHTML = `
-        <div class="lineage-dot">${person.gen || '?'}</div>
-        <div class="lineage-card">
-          <div class="lineage-name">${person.name}</div>
-          <span class="lineage-gen">Generation ${person.gen || '?'}</span>
-        </div>
-      `;
-
-      list.appendChild(li);
+    // quick chips (popular names)
+    const quick = [
+      'Hazrat Ali', 'Syed Sardar Ghazi', 'Syed Nasiruddin',
+      'Makhdoom Pir Syed Ahmad', 'Hazrat Imam Hussain', 'Syed Ali Hadi'
+    ];
+    quickChips.innerHTML = quick.map(name =>
+      `<div class="quick-chip" data-q="${escapeHtml(name)}">${escapeHtml(name)}</div>`
+    ).join('');
+    quickChips.querySelectorAll('.quick-chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        const q = chip.getAttribute('data-q');
+        searchInput.value = q;
+        doSearch(q);
+      });
     });
+
+    searchInput.focus();
   })
-  .catch(error => {
-    console.error("Error loading family.json:", error);
-    document.getElementById("lineageList").innerHTML = `
-      <p style='text-align:center;color:red;padding:20px;'>
-        डेटा लोड नहीं हो पाया।<br>
-        <small>Error: ${error.message}</small><br><br>
-        कृपया जाँचें:<br>
-        1. <b>family.json</b> उसी folder में है<br>
-        2. फाइल का नाम <b>family.json</b> है, <b>family.json.txt</b> नहीं<br>
-        3. JSON पूरा और सही है
-      </p>
+  .catch(err => {
+    console.error(err);
+    statusBox.className = 'error-box';
+    statusBox.innerHTML = `
+      डेटा लोड नहीं हो पाया।<br>
+      <small>Error: ${escapeHtml(err.message)}</small><br><br>
+      जाँचें: family.json उसी folder में है, नाम में .txt नहीं है, और JSON पूरा है।
     `;
   });
 </script>
