@@ -7,66 +7,61 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
 <style>
-  .lineage-container { max-width: 800px; margin: 40px auto; background: white; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); border: 1px solid var(--border); padding: 40px 20px; }
-  .lineage-title { text-align: center; color: var(--primary); font-size: 32px; margin-bottom: 15px; font-weight: 800; }
-  .subtitle { text-align: center; color: var(--ink-soft); margin-bottom: 30px; }
+  .lineage-container {
+    max-width: 780px; margin: 40px auto; background: white;
+    border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+    border: 1px solid var(--border); padding: 40px 25px;
+  }
+  .lineage-title { text-align: center; color: var(--primary); font-size: 30px; margin-bottom: 10px; font-weight: 800; }
+  .lineage-sub { text-align: center; color: var(--ink-soft); margin-bottom: 30px; font-size: 15px; }
 
-  /* Search */
-  .search-wrap { position: relative; margin-bottom: 20px; }
-  .search-wrap input { width: 100%; box-sizing: border-box; padding: 15px 20px; font-size: 16px; border: 2px solid var(--border); border-radius: 10px; font-family: inherit; outline: none; transition: 0.2s; }
+  .search-wrap { position: sticky; top: 10px; z-index: 20; background: white; padding: 15px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); margin-bottom: 30px; border: 1px solid var(--border); }
+  .search-wrap input {
+    width: 100%; box-sizing: border-box; padding: 14px 18px; font-size: 16px;
+    border: 2px solid var(--border); border-radius: 10px; outline: none;
+    font-family: inherit; transition: 0.2s;
+  }
   .search-wrap input:focus { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(30,58,138,0.1); }
+  .search-info { font-size: 13px; color: var(--ink-soft); margin-top: 8px; min-height: 18px; }
+  .search-info.err { color: #b91c1c; font-weight: 600; }
+  .search-info.ok { color: #15803d; font-weight: 600; }
 
-  .search-results { max-height: 420px; overflow-y: auto; border: 1px solid var(--border); border-radius: 10px; margin-top: 10px; background: white; }
-  .search-result { padding: 14px 18px; cursor: pointer; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; gap: 12px; transition: 0.15s; }
-  .search-result:last-child { border-bottom: none; }
-  .search-result:hover { background: var(--bg-soft); }
-  .search-result-name { font-weight: 600; color: var(--ink); flex: 1; line-height: 1.5; }
-  .search-result-gen { font-size: 12px; background: var(--accent-soft); color: var(--primary); padding: 4px 12px; border-radius: 20px; white-space: nowrap; font-weight: 600; }
+  .tree-list { list-style: none; padding: 0; margin: 0; position: relative; }
+  .tree-list::before {
+    content: ""; position: absolute; left: 26px; top: 27px; bottom: 27px;
+    width: 3px; background: #c7d2fe; border-radius: 2px;
+  }
+  .tree-item { position: relative; padding-left: 70px; padding-bottom: 22px; transition: opacity 0.25s; }
+  .tree-item:last-child { padding-bottom: 0; }
 
-  .empty-state { text-align: center; padding: 30px 20px; color: var(--ink-soft); }
+  .tree-dot {
+    position: absolute; left: 8px; top: 8px; width: 38px; height: 38px; border-radius: 50%;
+    background: white; border: 3px solid var(--primary);
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 14px; color: var(--primary);
+    z-index: 2; transition: 0.2s;
+  }
+  .tree-card {
+    background: var(--bg-soft); padding: 16px 20px; border-radius: 10px;
+    border: 1px solid var(--border); transition: 0.2s;
+  }
+  .tree-card:hover { border-color: var(--primary); box-shadow: 0 4px 15px rgba(30,58,138,0.08); }
+  .tree-name { font-size: 17px; font-weight: 700; color: var(--ink); line-height: 1.4; }
+  .tree-urdu { font-size: 15px; color: var(--ink-soft); direction: rtl; margin-top: 4px; line-height: 1.8; }
+  .tree-gen {
+    display: inline-block; margin-top: 8px;
+    background: var(--accent-soft); color: var(--primary);
+    padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.5px;
+  }
 
-  .quick-chips { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
-  .quick-chip { background: var(--bg-soft); padding: 8px 15px; border-radius: 20px; border: 1px solid var(--border); font-size: 14px; cursor: pointer; transition: 0.2s; color: var(--ink); }
-  .quick-chip:hover { background: var(--accent-soft); border-color: var(--primary); color: var(--primary); }
+  .tree-item.highlight .tree-card { background: #fef9c3; border-color: #ca8a04; box-shadow: 0 4px 22px rgba(202,138,4,0.3); }
+  .tree-item.highlight .tree-dot { background: #fde047; border-color: #ca8a04; color: #713f12; }
+  .tree-item.dim { opacity: 0.3; }
+  .tree-item.highlight { opacity: 1; }
 
-  /* Detail view */
-  .detail-view { padding-top: 5px; }
-  .back-btn { background: none; border: none; color: var(--primary); cursor: pointer; font-size: 15px; font-weight: 600; padding: 0; margin-bottom: 20px; font-family: inherit; }
-  .back-btn:hover { text-decoration: underline; }
-
-  .person-card { background: linear-gradient(135deg, #1e3a8a, #3b5bdb); color: white; padding: 30px 25px; border-radius: 12px; margin-bottom: 25px; }
-  .person-card h2 { margin: 0 0 8px; font-size: 22px; line-height: 1.4; font-weight: 700; }
-  .person-card .urdu-name { opacity: 0.95; margin-bottom: 12px; font-size: 18px; line-height: 1.8; direction: rtl; }
-  .person-card .meta { opacity: 0.85; font-size: 14px; margin-bottom: 12px; }
-  .gen-badge { display: inline-block; background: rgba(255,255,255,0.22); padding: 5px 14px; border-radius: 20px; font-size: 13px; font-weight: 600; }
-
-  .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin-bottom: 25px; }
-  .info-item { background: var(--bg-soft); padding: 14px 16px; border-radius: 8px; border: 1px solid var(--border); }
-  .info-label { font-size: 11px; color: var(--ink-soft); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 5px; font-weight: 700; }
-  .info-value { font-size: 14px; color: var(--ink); font-weight: 500; line-height: 1.6; }
-
-  .section-title { font-size: 17px; font-weight: 700; color: var(--primary); margin: 28px 0 18px; padding-bottom: 8px; border-bottom: 2px solid var(--accent-soft); }
-
-  /* Ancestral chain */
-  .chain-list { list-style: none; padding: 0; margin: 0; position: relative; }
-  .chain-list::before { content: ""; position: absolute; top: 8px; bottom: 8px; left: 15px; width: 2px; background: var(--accent-soft); }
-  .chain-item { position: relative; padding-left: 45px; padding-bottom: 18px; }
-  .chain-item:last-child { padding-bottom: 0; }
-  .chain-dot { position: absolute; left: 5px; top: 4px; width: 20px; height: 20px; border-radius: 50%; background: white; border: 3px solid var(--primary); z-index: 2; }
-  .chain-item.current .chain-dot { background: var(--primary); box-shadow: 0 0 0 4px rgba(30,58,138,0.2); }
-  .chain-name { font-weight: 600; color: var(--ink); cursor: pointer; font-size: 15px; line-height: 1.4; }
-  .chain-name:hover { color: var(--primary); }
-  .chain-name .urdu-small { font-weight: 400; color: var(--ink-soft); font-size: 13px; direction: rtl; margin-top: 2px; }
-  .chain-gen { font-size: 12px; color: var(--ink-soft); margin-top: 3px; }
-
-  .children-list { display: flex; flex-wrap: wrap; gap: 10px; }
-  .child-chip { background: var(--bg-soft); padding: 8px 14px; border-radius: 20px; border: 1px solid var(--border); font-size: 14px; cursor: pointer; transition: 0.2s; color: var(--ink); }
-  .child-chip:hover { background: var(--accent-soft); border-color: var(--primary); color: var(--primary); }
-  .child-chip small { color: var(--ink-soft); }
-
-  .loading { text-align: center; padding: 40px; color: var(--ink-soft); }
-  .error-box { text-align: center; padding: 30px 20px; color: #b91c1c; background: #fef2f2; border: 1px solid #fecaca; border-radius: 10px; }
-  .error-box small { color: #7f1d1d; }
+  .loading { text-align: center; padding: 40px; color: var(--ink-soft); list-style: none; }
+  .error-box { text-align: center; padding: 25px; background: #fef2f2; border: 1px solid #fecaca; border-radius: 10px; color: #b91c1c; list-style: none; }
 </style>
 </head>
 <body>
@@ -78,246 +73,153 @@
 <section class="container">
   <div class="lineage-container">
     <h1 class="lineage-title">Nanauta Sadat Lineage</h1>
-    <p class="subtitle">Search any name to view their lineage</p>
+    <p class="lineage-sub" id="lineageSub">Hazrat Ali (A.S.) → Syed Sardar Ghazi</p>
 
-    <div id="searchSection">
-      <div class="search-wrap">
-        <input type="text" id="searchInput" placeholder="नाम खोजें / Search name…" autocomplete="off">
-        <div id="searchResults" class="search-results" style="display:none;"></div>
-      </div>
-      <div class="quick-chips" id="quickChips"></div>
+    <div class="search-wrap">
+      <input type="text" id="searchInput" placeholder="नाम खोजें / Search name…" autocomplete="off">
+      <div class="search-info" id="searchInfo"></div>
     </div>
 
-    <div id="detailView" class="detail-view" style="display:none;"></div>
-
-    <div id="statusBox" class="loading">डेटा लोड हो रहा है…</div>
+    <ul class="tree-list" id="treeList">
+      <li class="loading">डेटा लोड हो रहा है…</li>
+    </ul>
   </div>
 </section>
 
 <footer class="site-footer"><div class="container"><div class="footer-bottom" style="border:none;"><p>© 2021–2026 Mokib 313. All rights reserved.</p></div></div></footer>
 
 <script>
-/* ---------- helpers ---------- */
+/* === Constants === */
+const ROOT_ID   = '376';   // Hazrat Ali (A.S.)
+const TARGET_ID = '243';   // Syed Sardar Ghazi
+
+/* === Helpers === */
 function escapeHtml(s) {
   if (s == null) return '';
-  return String(s).replace(/[&<>"']/g, c => ({
-    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
-  }[c]));
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
-function splitName(fullName) {
-  if (!fullName) return { en: '', ur: '' };
-  const m = String(fullName).match(/^(.*?)\s*[—–]\s*(.+)$/);
+function splitName(full) {
+  if (!full) return { en: '', ur: '' };
+  const m = String(full).match(/^(.*?)\s*[—–]\s*(.+)$/);
   if (m) return { en: m[1].trim(), ur: m[2].trim() };
-  return { en: String(fullName).trim(), ur: '' };
-}
-function numOrNull(x) {
-  const n = Number(x);
-  return isNaN(n) ? null : n;
+  return { en: String(full).trim(), ur: '' };
 }
 
-/* ---------- JSON parsing (phpMyAdmin-safe) ---------- */
+/* phpMyAdmin / wrapper JSON को unwrap करें */
 function extractPeople(raw) {
-  let data = raw;
-
-  if (data && data.family_json) {
-    data = typeof data.family_json === 'string'
-      ? JSON.parse(data.family_json) : data.family_json;
+  let d = raw;
+  if (d && d.family_json) d = typeof d.family_json === 'string' ? JSON.parse(d.family_json) : d.family_json;
+  if (Array.isArray(d) && d.length === 1 && d[0] && d[0].family_json) {
+    d = typeof d[0].family_json === 'string' ? JSON.parse(d[0].family_json) : d[0].family_json;
   }
-  if (Array.isArray(data) && data.length === 1 && data[0] && data[0].family_json) {
-    data = typeof data[0].family_json === 'string'
-      ? JSON.parse(data[0].family_json) : data[0].family_json;
+  if (Array.isArray(d)) {
+    const t = d.find(x => x && x.type === 'table' && Array.isArray(x.data));
+    if (t) d = t.data;
   }
-  if (Array.isArray(data)) {
-    const t = data.find(x => x && x.type === 'table' && Array.isArray(x.data));
-    if (t) data = t.data;
-  }
-  if (data && Array.isArray(data.data)) data = data.data;
-
-  if (!Array.isArray(data)) throw new Error("Persons array नहीं मिला");
-  return data.filter(p => p && (p.full_name || p.name));
+  if (d && Array.isArray(d.data)) d = d.data;
+  if (!Array.isArray(d)) throw new Error("Persons array नहीं मिला");
+  return d.filter(p => p && (p.full_name || p.name));
 }
 
-/* ---------- global state ---------- */
-let ALL = [];          // all persons
-let BY_ID = {};        // id -> person
-let BY_FATHER = {};    // father_id -> [children]
+/* === Main chain बनाएँ: Sardar Ghazi → Hazrat Ali (exactly 44) === */
+let BY_ID = {};
+function buildMainChain() {
+  const target = BY_ID[TARGET_ID];
+  if (!target) throw new Error("Sardar Ghazi (id 243) database में नहीं मिला");
 
-function buildIndex() {
-  BY_ID = {};
-  BY_FATHER = {};
-  ALL.forEach(p => {
-    const id = String(p.id);
-    BY_ID[id] = p;
-    if (p.father_id != null) {
-      const f = String(p.father_id);
-      (BY_FATHER[f] = BY_FATHER[f] || []).push(p);
+  /* Method 1 — lineage_path सबसे reliable */
+  if (target.lineage_path) {
+    const ids = String(target.lineage_path).split('/');
+    const startIdx = ids.indexOf(ROOT_ID);
+    if (startIdx >= 0) {
+      return ids.slice(startIdx).map(id => BY_ID[id]).filter(Boolean);
     }
-  });
-}
+  }
 
-function getAncestors(p) {
+  /* Method 2 — father_id walk करके Hazrat Ali पर रुकें */
   const chain = [];
+  let cur = target;
   const seen = new Set();
-  let cur = p;
   while (cur && !seen.has(String(cur.id))) {
     seen.add(String(cur.id));
     chain.push(cur);
+    if (String(cur.id) === ROOT_ID) break;
     cur = cur.father_id != null ? BY_ID[String(cur.father_id)] : null;
   }
   return chain.reverse();
 }
-function getChildren(p) {
-  return BY_FATHER[String(p.id)] || [];
-}
 
-/* ---------- search UI ---------- */
-const searchInput = document.getElementById('searchInput');
-const searchResults = document.getElementById('searchResults');
-const quickChips = document.getElementById('quickChips');
-const searchSection = document.getElementById('searchSection');
-const detailView = document.getElementById('detailView');
-const statusBox = document.getElementById('statusBox');
+/* === Render — top: Hazrat Ali (gen 1), bottom: Sardar Ghazi (gen 44) === */
+function renderTree(chain) {
+  const list = document.getElementById('treeList');
+  document.getElementById('lineageSub').textContent =
+    `Hazrat Ali (A.S.) → Syed Sardar Ghazi · ${chain.length} Generations`;
 
-function doSearch(query) {
-  const q = query.toLowerCase().trim();
-  if (!q) { searchResults.style.display = 'none'; return; }
-
-  const matches = ALL.filter(p => {
-    const name = String(p.full_name || p.name || '').toLowerCase();
-    return name.includes(q);
-  }).slice(0, 40);
-
-  if (!matches.length) {
-    searchResults.innerHTML = `<div class="empty-state">कोई परिणाम नहीं मिला</div>`;
-    searchResults.style.display = 'block';
+  if (!chain.length) {
+    list.innerHTML = "<li class='error-box'>Lineage chain खाली है।</li>";
     return;
   }
 
-  searchResults.innerHTML = matches.map(p => {
-    const { en, ur } = splitName(p.full_name || p.name || '');
+  list.innerHTML = chain.map((p, idx) => {
+    const gen = idx + 1;
+    const { en, ur } = splitName(p.full_name || '');
     return `
-      <div class="search-result" data-id="${escapeHtml(p.id)}">
-        <div class="search-result-name">
-          ${escapeHtml(en)}
-          ${ur ? `<br><small style="color:var(--ink-soft);font-weight:400;">${escapeHtml(ur)}</small>` : ''}
+      <li class="tree-item" data-id="${escapeHtml(p.id)}">
+        <div class="tree-dot">${gen}</div>
+        <div class="tree-card">
+          <div class="tree-name">${escapeHtml(en)}</div>
+          ${ur ? `<div class="tree-urdu">${escapeHtml(ur)}</div>` : ''}
+          <span class="tree-gen">Generation ${gen}</span>
         </div>
-        <span class="search-result-gen">Gen ${escapeHtml(p.generation_number || '?')}</span>
-      </div>`;
+      </li>`;
   }).join('');
-
-  searchResults.style.display = 'block';
-
-  searchResults.querySelectorAll('.search-result').forEach(el => {
-    el.addEventListener('click', () => showPerson(el.getAttribute('data-id')));
-  });
 }
 
-let searchTimer;
-searchInput.addEventListener('input', e => {
-  clearTimeout(searchTimer);
-  searchTimer = setTimeout(() => doSearch(e.target.value), 180);
-});
-searchInput.addEventListener('keydown', e => {
-  if (e.key === 'Enter') {
-    const first = searchResults.querySelector('.search-result');
-    if (first) first.click();
+/* === Search — highlight + scroll === */
+function doSearch(query) {
+  const info = document.getElementById('searchInfo');
+  const items = document.querySelectorAll('.tree-item');
+  const q = query.trim().toLowerCase();
+
+  if (!q) {
+    items.forEach(it => it.classList.remove('highlight', 'dim'));
+    info.textContent = '';
+    info.className = 'search-info';
+    return;
   }
-});
 
-/* ---------- detail view ---------- */
-function showPerson(id) {
-  const p = BY_ID[String(id)];
-  if (!p) return;
-
-  searchSection.style.display = 'none';
-  statusBox.style.display = 'none';
-  detailView.style.display = 'block';
-  searchResults.style.display = 'none';
-
-  const { en, ur } = splitName(p.full_name || p.name || '');
-  const ancestors = getAncestors(p);
-  const children = getChildren(p);
-
-  const info = [];
-  if (p.father_name) info.push(['Father', p.father_name]);
-  if (p.grandfather_name) info.push(['Grandfather', p.grandfather_name]);
-  if (p.mother_name) info.push(['Mother', p.mother_name]);
-  if (p.wife_name) info.push(['Wife', p.wife_name]);
-  if (p.husband_name) info.push(['Husband', p.husband_name]);
-  if (p.birth_date) info.push(['Birth', p.birth_date]);
-  if (p.death_date) info.push(['Death', p.death_date]);
-  if (p.martyrdom_date) info.push(['Martyrdom', p.martyrdom_date]);
-  if (p.birthplace) info.push(['Birthplace', p.birthplace]);
-  if (p.burial_place) info.push(['Burial', p.burial_place]);
-  if (p.residence) info.push(['Residence', p.residence]);
-  if (p.Education) info.push(['Education', p.Education]);
-  if (p.title_en) info.push(['Title', p.title_en]);
-  if (p.description) info.push(['Note', p.description]);
-
-  detailView.innerHTML = `
-    <button class="back-btn" id="backBtn">← वापस खोजें / Back to search</button>
-
-    <div class="person-card">
-      <h2>${escapeHtml(en)}</h2>
-      ${ur ? `<div class="urdu-name">${escapeHtml(ur)}</div>` : ''}
-      <div class="meta">
-        ${p.life_status ? escapeHtml(p.life_status) : ''}
-        ${p.relation_type ? ' • ' + escapeHtml(p.relation_type) : ''}
-      </div>
-      <span class="gen-badge">Generation ${escapeHtml(p.generation_number || '?')}</span>
-    </div>
-
-    ${info.length ? `
-      <div class="info-grid">
-        ${info.map(([k, v]) => `
-          <div class="info-item">
-            <div class="info-label">${escapeHtml(k)}</div>
-            <div class="info-value">${escapeHtml(v)}</div>
-          </div>`).join('')}
-      </div>` : ''}
-
-    ${ancestors.length > 1 ? `
-      <h3 class="section-title">वंशावली / Lineage Chain</h3>
-      <ul class="chain-list">
-        ${ancestors.map(a => {
-          const isCur = String(a.id) === String(p.id);
-          const { en: aEn, ur: aUr } = splitName(a.full_name || '');
-          return `
-            <li class="chain-item ${isCur ? 'current' : ''}">
-              <div class="chain-dot"></div>
-              <div class="chain-name" data-nav-id="${escapeHtml(a.id)}">
-                ${escapeHtml(aEn)}
-                ${aUr ? `<div class="urdu-small">${escapeHtml(aUr)}</div>` : ''}
-                <div class="chain-gen">Gen ${escapeHtml(a.generation_number || '?')}${isCur ? ' · current' : ''}</div>
-              </div>
-            </li>`;
-        }).join('')}
-      </ul>` : ''}
-
-    ${children.length ? `
-      <h3 class="section-title">संतान / Children (${children.length})</h3>
-      <div class="children-list">
-        ${children.map(c => {
-          const { en: cEn } = splitName(c.full_name || '');
-          return `<div class="child-chip" data-nav-id="${escapeHtml(c.id)}">${escapeHtml(cEn)} <small>· Gen ${escapeHtml(c.generation_number || '?')}</small></div>`;
-        }).join('')}
-      </div>` : ''}
-  `;
-
-  detailView.querySelectorAll('[data-nav-id]').forEach(el => {
-    el.addEventListener('click', () => showPerson(el.getAttribute('data-nav-id')));
-  });
-  document.getElementById('backBtn').addEventListener('click', () => {
-    detailView.style.display = 'none';
-    searchSection.style.display = 'block';
-    statusBox.style.display = 'none';
-    searchInput.focus();
+  const matches = [];
+  items.forEach(it => {
+    const p = BY_ID[it.dataset.id];
+    if (!p) return;
+    const fields = [p.full_name, p.name, p.self_name, p.person_code]
+      .filter(Boolean).map(f => String(f).toLowerCase());
+    if (fields.some(f => f.includes(q))) {
+      matches.push(it);
+      it.classList.add('highlight');
+      it.classList.remove('dim');
+    } else {
+      it.classList.add('dim');
+      it.classList.remove('highlight');
+    }
   });
 
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  if (matches.length) {
+    matches[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+    info.textContent = `✓ ${matches.length} match — main lineage me mila`;
+    info.className = 'search-info ok';
+  } else {
+    info.textContent = `✗ "${query}" — main lineage (Hazrat Ali → Sardar Ghazi) me nahi mila`;
+    info.className = 'search-info err';
+  }
 }
 
-/* ---------- load ---------- */
+document.getElementById('searchInput').addEventListener('input', e => {
+  clearTimeout(window._st);
+  window._st = setTimeout(() => doSearch(e.target.value), 150);
+});
+
+/* === Load JSON === */
 fetch('family.json', { cache: 'no-store' })
   .then(r => {
     if (!r.ok) throw new Error("family.json नहीं मिली (HTTP " + r.status + ")");
@@ -326,48 +228,22 @@ fetch('family.json', { cache: 'no-store' })
   .then(text => {
     let raw;
     try { raw = JSON.parse(text); }
-    catch (e) { throw new Error("JSON invalid है: " + e.message); }
+    catch (e) { throw new Error("JSON invalid: " + e.message); }
 
-    ALL = extractPeople(raw);
+    const people = extractPeople(raw);
+    BY_ID = {};
+    people.forEach(p => { BY_ID[String(p.id)] = p; });
 
-    // generation के हिसाब से sort (fallback search order)
-    ALL.sort((a, b) => {
-      const ga = numOrNull(a.generation_number ?? a.gen) ?? 9999;
-      const gb = numOrNull(b.generation_number ?? b.gen) ?? 9999;
-      return ga - gb;
-    });
-
-    buildIndex();
-
-    statusBox.style.display = 'none';
-    searchSection.style.display = 'block';
-
-    // quick chips (popular names)
-    const quick = [
-      'Hazrat Ali', 'Syed Sardar Ghazi', 'Syed Nasiruddin',
-      'Makhdoom Pir Syed Ahmad', 'Hazrat Imam Hussain', 'Syed Ali Hadi'
-    ];
-    quickChips.innerHTML = quick.map(name =>
-      `<div class="quick-chip" data-q="${escapeHtml(name)}">${escapeHtml(name)}</div>`
-    ).join('');
-    quickChips.querySelectorAll('.quick-chip').forEach(chip => {
-      chip.addEventListener('click', () => {
-        const q = chip.getAttribute('data-q');
-        searchInput.value = q;
-        doSearch(q);
-      });
-    });
-
-    searchInput.focus();
+    const chain = buildMainChain();
+    if (chain.length !== 44) {
+      console.warn("Chain length:", chain.length, "expected 44");
+    }
+    renderTree(chain);
   })
   .catch(err => {
     console.error(err);
-    statusBox.className = 'error-box';
-    statusBox.innerHTML = `
-      डेटा लोड नहीं हो पाया।<br>
-      <small>Error: ${escapeHtml(err.message)}</small><br><br>
-      जाँचें: family.json उसी folder में है, नाम में .txt नहीं है, और JSON पूरा है।
-    `;
+    document.getElementById('treeList').innerHTML =
+      `<li class="error-box">डेटा लोड नहीं हो पाया।<br><small>${escapeHtml(err.message)}</small></li>`;
   });
 </script>
 
