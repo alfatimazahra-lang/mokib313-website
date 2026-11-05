@@ -10,16 +10,16 @@
   /* वंशावली चेन के लिए स्टाइल */
   .lineage-container { max-width: 800px; margin: 40px auto; background: white; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); border: 1px solid var(--border); padding: 40px 20px; }
   .lineage-title { text-align: center; color: var(--primary); font-size: 32px; margin-bottom: 40px; font-weight: 800; }
-  
+
   .lineage-list { list-style: none; padding: 0; margin: 0; position: relative; }
   .lineage-list::before { content: ""; position: absolute; top: 0; bottom: 0; left: 30px; width: 4px; background: var(--accent-soft); border-radius: 2px; }
-  
+
   .lineage-item { position: relative; padding-left: 80px; margin-bottom: 30px; }
   .lineage-item:last-child { margin-bottom: 0; }
-  
+
   /* गोल डॉट (नोड) */
   .lineage-dot { position: absolute; left: 12px; top: 10px; width: 40px; height: 40px; border-radius: 50%; background: white; border: 4px solid var(--primary); display: flex; align-items: center; justify-content: center; font-weight: bold; color: var(--primary); z-index: 2; }
-  
+
   /* नाम का कार्ड */
   .lineage-card { background: var(--bg-soft); padding: 20px 25px; border-radius: 10px; border: 1px solid var(--border); transition: 0.3s; }
   .lineage-card:hover { transform: translateX(5px); border-color: var(--primary); box-shadow: 0 4px 15px rgba(30,58,138,0.1); }
@@ -32,13 +32,13 @@
 <!-- हेडर (JAS स्टाइल) -->
 <div class="top-bar"><div class="container"><a href="?lang=ur">اردو</a><a href="contact.html">Contact Us</a></div></div>
 <header class="main-header"><div class="container header-inner"><a href="index.html" class="logo">Mokib <span>313</span></a><div class="search-bar"><input type="text" placeholder="Search..."><button>🔍</button></div><div class="header-icons"><a href="https://mokib313.com/donate/" class="btn-donate-top">Donate Now</a></div></div></header>
-<nav class="main-nav-bar"><div class="container nav-inner"><a href="index.html">Home</a><a href="about.html">About Us</a><a href="intro.html">Introduction</a><a href="volunteer.html">Volunteers</a><a href="contact.html">Contact</a><a href="family.html" class="active">Family Lineage</a></div></nav>
+<nav class="main-nav-bar"><div class="container nav-inner"><a href="index.html">Home</a><a href="about.html">About Us</a><a href="intro.html">Introduction</a><a href="volunteer.html">Volunteers</a><a href="contact.html">Contact</a><a href="family.html" class="active">Family Lineage</a></nav>
 
 <section class="container">
   <div class="lineage-container">
     <h1 class="lineage-title">Nanauta Sadat Lineage</h1>
     <p style="text-align:center; color:var(--ink-soft); margin-bottom:40px;">From Hazrat Ali (A.S.) to Syed Sardar Ghazi</p>
-    
+
     <ul class="lineage-list" id="lineageList">
       <p style="text-align:center; padding:20px;">डेटा लोड हो रहा है...</p>
     </ul>
@@ -48,48 +48,123 @@
 <footer class="site-footer"><div class="container"><div class="footer-bottom" style="border:none;"><p>© 2021–2026 Mokib 313. All rights reserved.</p></div></div></footer>
 
 <script>
-  // 1. family.json से डेटा लोड करें
-  fetch('family.json')
-    .then(response => response.json())
-    .then(rawData => {
-      let data = rawData;
+/* ============================================================
+   family.json को किसी भी format से पढ़ने वाला helper
+   Support:
+   1) [ {...}, {...} ]                        → सीधा persons array
+   2) {"family_json": "[...]"}                → wrapped object
+   3) [{"family_json": "[...]"}]              → wrapped in array
+   4) phpMyAdmin export: [header, database, {type:"table", data:[...]}]
+   5) {"data": [...]}                         → object with data key
+   ============================================================ */
+function extractPeople(raw) {
+  let data = raw;
 
-      // अगर phpMyAdmin ने डेटा को एक ऑब्जेक्ट में रैप कर दिया है, तो उसे बाहर निकालें
-      if (data.length === 1 && data[0].family_json) {
-        data = JSON.parse(data[0].family_json);
-      }
+  // (2) {"family_json": "..."}
+  if (data && data.family_json) {
+    data = typeof data.family_json === 'string'
+      ? JSON.parse(data.family_json)
+      : data.family_json;
+  }
 
-      // डेटा को जनरेशन के हिसाब से सॉर्ट करें (हज़रत अली सबसे ऊपर)
-      data.sort((a, b) => (a.gen || 0) - (b.gen || 0));
+  // (3) [{ "family_json": "..." }]
+  if (Array.isArray(data) && data.length === 1 && data[0] && data[0].family_json) {
+    data = typeof data[0].family_json === 'string'
+      ? JSON.parse(data[0].family_json)
+      : data[0].family_json;
+  }
 
-      const list = document.getElementById('lineageList');
-      list.innerHTML = ''; // पहले खाली करें
+  // (4) phpMyAdmin export → table.data
+  if (Array.isArray(data)) {
+    const tableObj = data.find(x => x && x.type === 'table' && Array.isArray(x.data));
+    if (tableObj) data = tableObj.data;
+  }
 
-      if(data.length === 0) {
-        list.innerHTML = "<p style='text-align:center; color:red;'>कोई डेटा नहीं मिला।</p>";
-        return;
-      }
+  // (5) {data: [...]}
+  if (data && Array.isArray(data.data)) {
+    data = data.data;
+  }
 
-      data.forEach(person => {
-        let li = document.createElement('li');
-        li.className = 'lineage-item';
-        
-        // हर व्यक्ति के लिए गोल डॉट और कार्ड
-        li.innerHTML = `
-          <div class="lineage-dot">${person.gen || '?'}</div>
-          <div class="lineage-card">
-            <div class="lineage-name">${person.name}</div>
-            <span class="lineage-gen">Generation ${person.gen || '?'}</span>
-          </div>
-        `;
-        
-        list.appendChild(li);
-      });
-    })
-    .catch(error => {
-      console.error("Error loading JSON:", error);
-      document.getElementById("lineageList").innerHTML = "<p style='text-align:center; color:red; padding:20px;'>डेटा लोड नहीं हो पाया। कृपया family.json फाइल चेक करें।</p>";
+  if (!Array.isArray(data)) {
+    throw new Error("Persons array नहीं मिला (format अजीब है)");
+  }
+
+  // साफ-सुथरा normalize
+  return data
+    .filter(p => p && (p.full_name || p.name))
+    .map(p => ({
+      ...p,
+      gen: p.gen ?? p.generation_number ?? p.generation ?? '?',
+      name: p.name ?? p.full_name ?? ''
+    }));
+}
+
+/* ============================
+   डेटा लोड करें और render करें
+   ============================ */
+fetch('family.json', { cache: 'no-store' })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error("family.json नहीं मिली — HTTP " + response.status);
+    }
+    return response.text(); // पहले text लें ताकि पार्स एरर पकड़ सकें
+  })
+  .then(text => {
+    let raw;
+    try {
+      raw = JSON.parse(text);
+    } catch (e) {
+      throw new Error("JSON invalid है: " + e.message);
+    }
+
+    const data = extractPeople(raw);
+
+    // generation के हिसाब से sort (Hazrat Ali सबसे ऊपर)
+    data.sort((a, b) => {
+      const ga = Number(a.gen);
+      const gb = Number(b.gen);
+      if (isNaN(ga) && isNaN(gb)) return 0;
+      if (isNaN(ga)) return 1;
+      if (isNaN(gb)) return -1;
+      return ga - gb;
     });
+
+    const list = document.getElementById('lineageList');
+    list.innerHTML = '';
+
+    if (data.length === 0) {
+      list.innerHTML = "<p style='text-align:center;color:red;'>कोई डेटा नहीं मिला।</p>";
+      return;
+    }
+
+    data.forEach(person => {
+      const li = document.createElement('li');
+      li.className = 'lineage-item';
+
+      li.innerHTML = `
+        <div class="lineage-dot">${person.gen || '?'}</div>
+        <div class="lineage-card">
+          <div class="lineage-name">${person.name}</div>
+          <span class="lineage-gen">Generation ${person.gen || '?'}</span>
+        </div>
+      `;
+
+      list.appendChild(li);
+    });
+  })
+  .catch(error => {
+    console.error("Error loading family.json:", error);
+    document.getElementById("lineageList").innerHTML = `
+      <p style='text-align:center;color:red;padding:20px;'>
+        डेटा लोड नहीं हो पाया।<br>
+        <small>Error: ${error.message}</small><br><br>
+        कृपया जाँचें:<br>
+        1. <b>family.json</b> उसी folder में है<br>
+        2. फाइल का नाम <b>family.json</b> है, <b>family.json.txt</b> नहीं<br>
+        3. JSON पूरा और सही है
+      </p>
+    `;
+  });
 </script>
 
 </body>
