@@ -41,11 +41,34 @@
     font-weight: 700; font-size: 14px; color: var(--primary);
     z-index: 2; transition: 0.2s;
   }
+
   .tree-card {
-    background: var(--bg-soft); padding: 16px 20px; border-radius: 10px;
+    background: var(--bg-soft); padding: 14px 18px; border-radius: 10px;
     border: 1px solid var(--border); transition: 0.2s;
+    display: flex; align-items: center; gap: 16px;
   }
   .tree-card:hover { border-color: var(--primary); box-shadow: 0 4px 15px rgba(30,58,138,0.08); }
+
+  /* === Photo / Avatar === */
+  .tree-photo {
+    flex-shrink: 0;
+    width: 64px; height: 64px; border-radius: 50%;
+    object-fit: cover; object-position: center top;
+    border: 3px solid white;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    background: #e5e7eb;
+  }
+  .tree-photo-fallback {
+    flex-shrink: 0;
+    width: 64px; height: 64px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    background: linear-gradient(135deg, var(--primary), #3b5bdb);
+    color: white; font-weight: 800; font-size: 22px;
+    border: 3px solid white;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  }
+
+  .tree-text { min-width: 0; flex: 1; }
   .tree-name { font-size: 17px; font-weight: 700; color: var(--ink); line-height: 1.4; }
   .tree-urdu { font-size: 15px; color: var(--ink-soft); direction: rtl; margin-top: 4px; line-height: 1.8; }
   .tree-gen {
@@ -90,8 +113,8 @@
 
 <script>
 /* === Constants === */
-const ROOT_ID   = '376';   // Hazrat Ali (A.S.)
-const TARGET_ID = '243';   // Syed Sardar Ghazi
+const ROOT_ID   = '376';
+const TARGET_ID = '243';
 
 /* === Helpers === */
 function escapeHtml(s) {
@@ -104,8 +127,13 @@ function splitName(full) {
   if (m) return { en: m[1].trim(), ur: m[2].trim() };
   return { en: String(full).trim(), ur: '' };
 }
+function sanitizeImageUrl(url) {
+  if (!url) return '';
+  // JSON में "\/" escaped हो सकता है
+  return String(url).replace(/\\\//g, '/');
+}
 
-/* phpMyAdmin / wrapper JSON को unwrap करें */
+/* phpMyAdmin JSON unwrap */
 function extractPeople(raw) {
   let d = raw;
   if (d && d.family_json) d = typeof d.family_json === 'string' ? JSON.parse(d.family_json) : d.family_json;
@@ -121,13 +149,12 @@ function extractPeople(raw) {
   return d.filter(p => p && (p.full_name || p.name));
 }
 
-/* === Main chain बनाएँ: Sardar Ghazi → Hazrat Ali (exactly 44) === */
+/* === Build 44-person chain === */
 let BY_ID = {};
 function buildMainChain() {
   const target = BY_ID[TARGET_ID];
-  if (!target) throw new Error("Sardar Ghazi (id 243) database में नहीं मिला");
+  if (!target) throw new Error("Sardar Ghazi (id 243) नहीं मिला");
 
-  /* Method 1 — lineage_path सबसे reliable */
   if (target.lineage_path) {
     const ids = String(target.lineage_path).split('/');
     const startIdx = ids.indexOf(ROOT_ID);
@@ -135,11 +162,7 @@ function buildMainChain() {
       return ids.slice(startIdx).map(id => BY_ID[id]).filter(Boolean);
     }
   }
-
-  /* Method 2 — father_id walk करके Hazrat Ali पर रुकें */
-  const chain = [];
-  let cur = target;
-  const seen = new Set();
+  const chain = []; let cur = target; const seen = new Set();
   while (cur && !seen.has(String(cur.id))) {
     seen.add(String(cur.id));
     chain.push(cur);
@@ -149,7 +172,7 @@ function buildMainChain() {
   return chain.reverse();
 }
 
-/* === Render — top: Hazrat Ali (gen 1), bottom: Sardar Ghazi (gen 44) === */
+/* === Render tree with photos === */
 function renderTree(chain) {
   const list = document.getElementById('treeList');
   document.getElementById('lineageSub').textContent =
@@ -163,19 +186,40 @@ function renderTree(chain) {
   list.innerHTML = chain.map((p, idx) => {
     const gen = idx + 1;
     const { en, ur } = splitName(p.full_name || '');
+    const img = sanitizeImageUrl(p.image_url);
+    const initial = (en || '?').charAt(0).toUpperCase();
+
+    // Photo: agar image_url hai to <img>, warna fallback initial
+    const photoHtml = img
+      ? `<img class="tree-photo" src="${escapeHtml(img)}" alt="${escapeHtml(en)}"
+              loading="lazy" referrerpolicy="no-referrer"
+              onerror="this.replaceWith(makeFallback('${escapeHtml(initial)}'))">`
+      : `<div class="tree-photo-fallback">${escapeHtml(initial)}</div>`;
+
     return `
       <li class="tree-item" data-id="${escapeHtml(p.id)}">
         <div class="tree-dot">${gen}</div>
         <div class="tree-card">
-          <div class="tree-name">${escapeHtml(en)}</div>
-          ${ur ? `<div class="tree-urdu">${escapeHtml(ur)}</div>` : ''}
-          <span class="tree-gen">Generation ${gen}</span>
+          ${photoHtml}
+          <div class="tree-text">
+            <div class="tree-name">${escapeHtml(en)}</div>
+            ${ur ? `<div class="tree-urdu">${escapeHtml(ur)}</div>` : ''}
+            <span class="tree-gen">Generation ${gen}</span>
+          </div>
         </div>
       </li>`;
   }).join('');
 }
 
-/* === Search — highlight + scroll === */
+/* Fallback initial बनाने वाला global helper (onerror के लिए) */
+window.makeFallback = function(letter) {
+  const d = document.createElement('div');
+  d.className = 'tree-photo-fallback';
+  d.textContent = letter || '?';
+  return d;
+};
+
+/* === Search === */
 function doSearch(query) {
   const info = document.getElementById('searchInfo');
   const items = document.querySelectorAll('.tree-item');
@@ -183,8 +227,7 @@ function doSearch(query) {
 
   if (!q) {
     items.forEach(it => it.classList.remove('highlight', 'dim'));
-    info.textContent = '';
-    info.className = 'search-info';
+    info.textContent = ''; info.className = 'search-info';
     return;
   }
 
@@ -196,11 +239,9 @@ function doSearch(query) {
       .filter(Boolean).map(f => String(f).toLowerCase());
     if (fields.some(f => f.includes(q))) {
       matches.push(it);
-      it.classList.add('highlight');
-      it.classList.remove('dim');
+      it.classList.add('highlight'); it.classList.remove('dim');
     } else {
-      it.classList.add('dim');
-      it.classList.remove('highlight');
+      it.classList.add('dim'); it.classList.remove('highlight');
     }
   });
 
@@ -219,7 +260,7 @@ document.getElementById('searchInput').addEventListener('input', e => {
   window._st = setTimeout(() => doSearch(e.target.value), 150);
 });
 
-/* === Load JSON === */
+/* === Load === */
 fetch('family.json', { cache: 'no-store' })
   .then(r => {
     if (!r.ok) throw new Error("family.json नहीं मिली (HTTP " + r.status + ")");
@@ -235,9 +276,7 @@ fetch('family.json', { cache: 'no-store' })
     people.forEach(p => { BY_ID[String(p.id)] = p; });
 
     const chain = buildMainChain();
-    if (chain.length !== 44) {
-      console.warn("Chain length:", chain.length, "expected 44");
-    }
+    console.log("Chain length:", chain.length);
     renderTree(chain);
   })
   .catch(err => {
