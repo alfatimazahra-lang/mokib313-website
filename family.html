@@ -3,141 +3,93 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Nanauta Sadat Family Tree | Mokib 313</title>
+<title>Lineage | Nanauta Sadat</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
-<!-- Family Chart लाइब्रेरी (CDN से) -->
-<script src="https://unpkg.com/family-chart@latest/dist/family-chart.min.js"></script>
 <style>
-  .tree-container { width: 100%; height: 800px; background: white; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); border: 1px solid var(--border); margin-bottom: 40px; position: relative; overflow: hidden; }
-  .search-area { display: flex; gap: 10px; margin-bottom: 20px; max-width: 600px; margin: 20px auto; }
-  .search-area input { flex: 1; padding: 15px; border: 2px solid var(--primary); border-radius: 8px; font-size: 16px; outline: none; }
-  .search-area button { background: var(--primary); color: white; border: none; padding: 0 30px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 16px; }
+  /* वंशावली चेन के लिए स्टाइल */
+  .lineage-container { max-width: 800px; margin: 40px auto; background: white; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); border: 1px solid var(--border); padding: 40px 20px; }
+  .lineage-title { text-align: center; color: var(--primary); font-size: 32px; margin-bottom: 40px; font-weight: 800; }
+  
+  .lineage-list { list-style: none; padding: 0; margin: 0; position: relative; }
+  .lineage-list::before { content: ""; position: absolute; top: 0; bottom: 0; left: 30px; width: 4px; background: var(--accent-soft); border-radius: 2px; }
+  
+  .lineage-item { position: relative; padding-left: 80px; margin-bottom: 30px; }
+  .lineage-item:last-child { margin-bottom: 0; }
+  
+  /* गोल डॉट (नोड) */
+  .lineage-dot { position: absolute; left: 12px; top: 10px; width: 40px; height: 40px; border-radius: 50%; background: white; border: 4px solid var(--primary); display: flex; align-items: center; justify-content: center; font-weight: bold; color: var(--primary); z-index: 2; }
+  
+  /* नाम का कार्ड */
+  .lineage-card { background: var(--bg-soft); padding: 20px 25px; border-radius: 10px; border: 1px solid var(--border); transition: 0.3s; }
+  .lineage-card:hover { transform: translateX(5px); border-color: var(--primary); box-shadow: 0 4px 15px rgba(30,58,138,0.1); }
+  .lineage-name { font-size: 20px; font-weight: 700; color: var(--ink); margin-bottom: 5px; }
+  .lineage-gen { display: inline-block; background: var(--accent); color: white; padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: bold; }
 </style>
 </head>
 <body>
 
 <!-- हेडर (JAS स्टाइल) -->
-<div class="top-bar">
-  <div class="container">
-    <a href="?lang=ur">اردو</a>
-    <a href="contact.html">Contact Us</a>
-  </div>
-</div>
-<header class="main-header">
-  <div class="container header-inner">
-    <a href="index.html" class="logo">Mokib <span>313</span></a>
-    <div class="search-bar">
-      <input type="text" placeholder="Search...">
-      <button>🔍</button>
-    </div>
-    <div class="header-icons">
-      <a href="https://mokib313.com/donate/" class="btn-donate-top">Donate Now</a>
-    </div>
-  </div>
-</header>
-<nav class="main-nav-bar">
-  <div class="container nav-inner">
-    <a href="index.html">Home</a>
-    <a href="about.html">About Us</a>
-    <a href="intro.html">Introduction</a>
-    <a href="volunteer.html">Volunteers</a>
-    <a href="contact.html">Contact</a>
-    <a href="family.html" class="active">Family Tree</a>
-  </div>
-</nav>
+<div class="top-bar"><div class="container"><a href="?lang=ur">اردو</a><a href="contact.html">Contact Us</a></div></div>
+<header class="main-header"><div class="container header-inner"><a href="index.html" class="logo">Mokib <span>313</span></a><div class="search-bar"><input type="text" placeholder="Search..."><button>🔍</button></div><div class="header-icons"><a href="https://mokib313.com/donate/" class="btn-donate-top">Donate Now</a></div></div></header>
+<nav class="main-nav-bar"><div class="container nav-inner"><a href="index.html">Home</a><a href="about.html">About Us</a><a href="intro.html">Introduction</a><a href="volunteer.html">Volunteers</a><a href="contact.html">Contact</a><a href="family.html" class="active">Family Lineage</a></div></nav>
 
-<!-- मुख्य सेक्शन -->
-<section class="container" style="padding-top: 40px;">
-  <div style="text-align:center;">
-    <h1 style="color:var(--primary); font-size:36px; margin-bottom:10px;">Nanauta Sadat Family Tree</h1>
-    <p style="color:var(--ink-soft); margin-bottom:20px;">तारीख़ हज़रत आदम (अ.स.) से</p>
+<section class="container">
+  <div class="lineage-container">
+    <h1 class="lineage-title">Nanauta Sadat Lineage</h1>
+    <p style="text-align:center; color:var(--ink-soft); margin-bottom:40px;">From Hazrat Ali (A.S.) to Syed Sardar Ghazi</p>
+    
+    <ul class="lineage-list" id="lineageList">
+      <p style="text-align:center; padding:20px;">डेटा लोड हो रहा है...</p>
+    </ul>
   </div>
-
-  <!-- सर्च बार -->
-  <div class="search-area">
-    <input type="text" id="searchName" placeholder="नाम सर्च करें (जैसे: Haider, Ali, Fatima)...">
-    <button onclick="searchTree()">Search</button>
-  </div>
-
-  <!-- ट्री यहाँ बनेगी -->
-  <div class="tree-container" id="tree"></div>
 </section>
 
-<!-- फूटर (JAS स्टाइल) -->
-<footer class="site-footer">
-  <div class="container">
-    <div class="footer-bottom" style="border:none;">
-      <p>© 2021–2026 Mokib 313. All rights reserved.</p>
-    </div>
-  </div>
-</footer>
+<footer class="site-footer"><div class="container"><div class="footer-bottom" style="border:none;"><p>© 2021–2026 Mokib 313. All rights reserved.</p></div></div></footer>
 
 <script>
-  let chart;
-
   // 1. family.json से डेटा लोड करें
   fetch('family.json')
     .then(response => response.json())
-    .then(data => {
-      
-      // Family Chart के लिए डेटा फॉर्मेट करें
-      // (इस लाइब्रेरी में डेटा को एक खास तरीके से देना होता है)
-      let formattedData = data
-        .filter(person => person.is_deleted == 0 && person.full_name) // डिलीट हुए और खाली नाम वाले लोगों को हटाएँ
-        .map(person => ({
-          id: String(person.id),
-          data: {
-            "name": person.full_name,
-            "gender": (person.gender || "").toLowerCase() === 'female' ? 'F' : 'M',
-            "birthYear": person.birth_year || "",
-            "avatar": person.image_url || "https://ui-avatars.com/api/?name=" + encodeURIComponent(person.full_name) + "&background=1e3a8a&color=fff"
-          },
-          rels: {
-            parents: person.father_id ? [String(person.father_id)] : [],
-            children: [] // चिल्ड्रन को बाद में भरा जाएगा
-          }
-        }));
+    .then(rawData => {
+      let data = rawData;
 
-      // चिल्ड्रन को भरें (हर व्यक्ति के लिए, यह देखें कि कौन उसका बच्चा है)
-      formattedData.forEach(person => {
-        let childrenIds = data
-          .filter(p => p.father_id == person.id && p.is_deleted == 0)
-          .map(p => String(p.id));
-        person.rels.children = childrenIds;
+      // अगर phpMyAdmin ने डेटा को एक ऑब्जेक्ट में रैप कर दिया है, तो उसे बाहर निकालें
+      if (data.length === 1 && data[0].family_json) {
+        data = JSON.parse(data[0].family_json);
+      }
+
+      // डेटा को जनरेशन के हिसाब से सॉर्ट करें (हज़रत अली सबसे ऊपर)
+      data.sort((a, b) => (a.gen || 0) - (b.gen || 0));
+
+      const list = document.getElementById('lineageList');
+      list.innerHTML = ''; // पहले खाली करें
+
+      if(data.length === 0) {
+        list.innerHTML = "<p style='text-align:center; color:red;'>कोई डेटा नहीं मिला।</p>";
+        return;
+      }
+
+      data.forEach(person => {
+        let li = document.createElement('li');
+        li.className = 'lineage-item';
+        
+        // हर व्यक्ति के लिए गोल डॉट और कार्ड
+        li.innerHTML = `
+          <div class="lineage-dot">${person.gen || '?'}</div>
+          <div class="lineage-card">
+            <div class="lineage-name">${person.name}</div>
+            <span class="lineage-gen">Generation ${person.gen || '?'}</span>
+          </div>
+        `;
+        
+        list.appendChild(li);
       });
-
-      // 2. ट्री इनिशियलाइज़ करें
-      chart = f3.createChart('#tree', formattedData)
-        .setTransitionTime(1000)
-        .setCardXSpacing(250)
-        .setCardYSpacing(150)
-        .setOrientation('vertical'); // 'vertical' या 'horizontal'
-
-      // कार्ड्स को कस्टमाइज़ करें (नाम और फोटो दिखाने के लिए)
-      chart.setCardHtml()
-        .setCardDisplay([["name"], ["birthYear"]])
-        .setCardDim({ "width": 200, "height": 100 })
-        .setCardImageField("avatar");
-
-      // ट्री को रेंडर करें
-      chart.updateTree({ initial: true });
-
     })
     .catch(error => {
       console.error("Error loading JSON:", error);
-      document.getElementById("tree").innerHTML = "<p style='text-align:center; padding:50px;'>डेटा लोड नहीं हो पाया। कृपया family.json फाइल चेक करें।</p>";
+      document.getElementById("lineageList").innerHTML = "<p style='text-align:center; color:red; padding:20px;'>डेटा लोड नहीं हो पाया। कृपया family.json फाइल चेक करें।</p>";
     });
-
-  // 3. सर्च फंक्शन
-  function searchTree() {
-    let input = document.getElementById('searchName').value.toLowerCase();
-    if(!chart || input === "") return;
-    
-    // Family Chart में सर्च फंक्शन (अगर उपलब्ध हो)
-    // फिलहाल के लिए, हम ट्री को रीसेट कर सकते हैं या एक अलर्ट दिखा सकते हैं
-    alert("सर्च फंक्शन फिलहाल के लिए उपलब्ध नहीं है, कृपया ट्री को मैन्युअली एक्सप्लोर करें।");
-  }
 </script>
 
 </body>
