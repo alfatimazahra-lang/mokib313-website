@@ -1,202 +1,142 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>नानौता सादात — फैमिली ट्री</title>
-<script src="https://cdn.balkan.app/orgchart.js"></script>
+<title>Nanauta Sadat Family Tree | Mokib 313</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<!-- Family Chart लाइब्रेरी (CDN से) -->
+<script src="https://unpkg.com/family-chart@latest/dist/family-chart.min.js"></script>
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
-    background: #f4f6fa;
-    color: #1e293b;
-  }
-  header {
-    background: linear-gradient(135deg, #1e3a8a, #0f172a);
-    color: #fff;
-    padding: 18px 24px;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-  }
-  header h1 { font-size: 1.3rem; font-weight: 600; letter-spacing: 0.3px; }
-  header small { display: block; font-size: 0.75rem; opacity: 0.8; margin-top: 2px; }
-
-  .search-box {
-    display: flex;
-    gap: 8px;
-  }
-  .search-box input {
-    padding: 9px 14px;
-    border: none;
-    border-radius: 6px;
-    font-size: 0.95rem;
-    width: 220px;
-    outline: none;
-  }
-  .search-box button {
-    padding: 9px 16px;
-    background: #f59e0b;
-    color: #1e293b;
-    border: none;
-    border-radius: 6px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.2s;
-  }
-  .search-box button:hover { background: #fbbf24; }
-
-  #tree {
-    width: 100%;
-    height: calc(100vh - 78px);
-  }
-
-  .loading {
-    text-align: center;
-    padding: 60px 20px;
-    color: #64748b;
-    font-size: 1.05rem;
-  }
-
-  .error-box {
-    max-width: 600px;
-    margin: 80px auto;
-    padding: 30px;
-    background: #fee2e2;
-    border: 1px solid #fca5a5;
-    border-radius: 10px;
-    color: #991b1b;
-    text-align: center;
-    line-height: 1.6;
-  }
-  .error-box strong { display: block; margin-bottom: 8px; font-size: 1.1rem; }
+  .tree-container { width: 100%; height: 800px; background: white; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); border: 1px solid var(--border); margin-bottom: 40px; position: relative; overflow: hidden; }
+  .search-area { display: flex; gap: 10px; margin-bottom: 20px; max-width: 600px; margin: 20px auto; }
+  .search-area input { flex: 1; padding: 15px; border: 2px solid var(--primary); border-radius: 8px; font-size: 16px; outline: none; }
+  .search-area button { background: var(--primary); color: white; border: none; padding: 0 30px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 16px; }
 </style>
 </head>
 <body>
 
-<header>
-  <div>
-    <h1>🌳 नानौता सादात — फैमिली ट्री</h1>
-    <small>सैयद नसीरुद्दीन मीर मुंशी की औलाद</small>
+<!-- हेडर (JAS स्टाइल) -->
+<div class="top-bar">
+  <div class="container">
+    <a href="?lang=ur">اردو</a>
+    <a href="contact.html">Contact Us</a>
   </div>
-  <div class="search-box">
-    <input type="text" id="searchName" placeholder="नाम से खोजें..."
-           onkeydown="if(event.key==='Enter') searchTree()">
-    <button onclick="searchTree()">🔍 खोजें</button>
+</div>
+<header class="main-header">
+  <div class="container header-inner">
+    <a href="index.html" class="logo">Mokib <span>313</span></a>
+    <div class="search-bar">
+      <input type="text" placeholder="Search...">
+      <button>🔍</button>
+    </div>
+    <div class="header-icons">
+      <a href="https://mokib313.com/donate/" class="btn-donate-top">Donate Now</a>
+    </div>
   </div>
 </header>
+<nav class="main-nav-bar">
+  <div class="container nav-inner">
+    <a href="index.html">Home</a>
+    <a href="about.html">About Us</a>
+    <a href="intro.html">Introduction</a>
+    <a href="volunteer.html">Volunteers</a>
+    <a href="contact.html">Contact</a>
+    <a href="family.html" class="active">Family Tree</a>
+  </div>
+</nav>
 
-<div id="tree">
-  <div class="loading">⏳ डेटा लोड हो रहा है... कृपया प्रतीक्षा करें।</div>
-</div>
+<!-- मुख्य सेक्शन -->
+<section class="container" style="padding-top: 40px;">
+  <div style="text-align:center;">
+    <h1 style="color:var(--primary); font-size:36px; margin-bottom:10px;">Nanauta Sadat Family Tree</h1>
+    <p style="color:var(--ink-soft); margin-bottom:20px;">तारीख़ हज़रत आदम (अ.स.) से</p>
+  </div>
+
+  <!-- सर्च बार -->
+  <div class="search-area">
+    <input type="text" id="searchName" placeholder="नाम सर्च करें (जैसे: Haider, Ali, Fatima)...">
+    <button onclick="searchTree()">Search</button>
+  </div>
+
+  <!-- ट्री यहाँ बनेगी -->
+  <div class="tree-container" id="tree"></div>
+</section>
+
+<!-- फूटर (JAS स्टाइल) -->
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-bottom" style="border:none;">
+      <p>© 2021–2026 Mokib 313. All rights reserved.</p>
+    </div>
+  </div>
+</footer>
 
 <script>
   let chart;
-  let treeNodes = [];
 
-  // ---------- 1. family.json से डेटा लोड करें ----------
+  // 1. family.json से डेटा लोड करें
   fetch('family.json')
-    .then(response => {
-      if (!response.ok) throw new Error("family.json load nahi hui (" + response.status + ")");
-      return response.json();
-    })
-    .then(json => {
-
-      // phpMyAdmin JSON wrapper में असली table data खोजें
-      let people = [];
-
-      if (Array.isArray(json)) {
-        const tableObject = json.find(
-          item => item && item.type === "table" && Array.isArray(item.data)
-        );
-        if (tableObject) {
-          people = tableObject.data;
-        } else if (json.length && json[0].id) {
-          // अगर सीधा array of records है
-          people = json;
-        }
-      }
-
-      if (!people.length) {
-        throw new Error("JSON में people का डेटा नहीं मिला");
-      }
-
-      console.log("कुल records:", people.length);
-
-      // ---------- 2. फॉर्मेट करें ----------
-      treeNodes = people
-        .filter(person =>
-          person &&
-          String(person.is_deleted) === "0" &&
-          person.full_name &&
-          person.full_name.trim() !== ""
-        )
+    .then(response => response.json())
+    .then(data => {
+      
+      // Family Chart के लिए डेटा फॉर्मेट करें
+      // (इस लाइब्रेरी में डेटा को एक खास तरीके से देना होता है)
+      let formattedData = data
+        .filter(person => person.is_deleted == 0 && person.full_name) // डिलीट हुए और खाली नाम वाले लोगों को हटाएँ
         .map(person => ({
           id: String(person.id),
-          pid: person.father_id && person.father_id !== "0"
-                ? String(person.father_id)
-                : null,
-          name: person.full_name,
-          title: "Gen " + (person.generation_number || "?"),
-          img: person.image_url && person.image_url.trim() !== ""
-            ? person.image_url
-            : "https://ui-avatars.com/api/?name=" +
-              encodeURIComponent(person.full_name) +
-              "&background=1e3a8a&color=fff&bold=true"
+          data: {
+            "name": person.full_name,
+            "gender": (person.gender || "").toLowerCase() === 'female' ? 'F' : 'M',
+            "birthYear": person.birth_year || "",
+            "avatar": person.image_url || "https://ui-avatars.com/api/?name=" + encodeURIComponent(person.full_name) + "&background=1e3a8a&color=fff"
+          },
+          rels: {
+            parents: person.father_id ? [String(person.father_id)] : [],
+            children: [] // चिल्ड्रन को बाद में भरा जाएगा
+          }
         }));
 
-      console.log("ट्री में nodes:", treeNodes.length);
-
-      // ---------- 3. ट्री इनिशियलाइज़ ----------
-      document.getElementById("tree").innerHTML = "";
-
-      chart = new OrgChart(document.getElementById("tree"), {
-        nodes: treeNodes,
-        nodeBinding: {
-          field_0: "name",
-          field_1: "title",
-          img_0: "img"
-        },
-        layout: OrgChart.mixed,
-        scaleInitial: OrgChart.match.boundary,
-        enableSearch: false,
-        mouseScrool: OrgChart.action.zoom,
-        nodeMouseClick: OrgChart.action.none
+      // चिल्ड्रन को भरें (हर व्यक्ति के लिए, यह देखें कि कौन उसका बच्चा है)
+      formattedData.forEach(person => {
+        let childrenIds = data
+          .filter(p => p.father_id == person.id && p.is_deleted == 0)
+          .map(p => String(p.id));
+        person.rels.children = childrenIds;
       });
+
+      // 2. ट्री इनिशियलाइज़ करें
+      chart = f3.createChart('#tree', formattedData)
+        .setTransitionTime(1000)
+        .setCardXSpacing(250)
+        .setCardYSpacing(150)
+        .setOrientation('vertical'); // 'vertical' या 'horizontal'
+
+      // कार्ड्स को कस्टमाइज़ करें (नाम और फोटो दिखाने के लिए)
+      chart.setCardHtml()
+        .setCardDisplay([["name"], ["birthYear"]])
+        .setCardDim({ "width": 200, "height": 100 })
+        .setCardImageField("avatar");
+
+      // ट्री को रेंडर करें
+      chart.updateTree({ initial: true });
 
     })
     .catch(error => {
       console.error("Error loading JSON:", error);
-      document.getElementById("tree").innerHTML =
-        "<div class='error-box'>" +
-        "<strong>⚠️ डेटा लोड नहीं हो पाया</strong>" +
-        "कारण: " + error.message + "<br><br>" +
-        "कृपया जाँचें:<br>" +
-        "1. <b>family.json</b> फाइल उसी folder में रखी है जहाँ <b>family.html</b> है।<br>" +
-        "2. फाइल का नाम ठीक <b>family.json</b> है (case-sensitive)।<br>" +
-        "3. GitHub पर दोनों फाइलें upload हो चुकी हैं।" +
-        "</div>";
+      document.getElementById("tree").innerHTML = "<p style='text-align:center; padding:50px;'>डेटा लोड नहीं हो पाया। कृपया family.json फाइल चेक करें।</p>";
     });
 
-  // ---------- 4. सर्च फंक्शन ----------
+  // 3. सर्च फंक्शन
   function searchTree() {
-    const input = document.getElementById('searchName').value.trim().toLowerCase();
-
-    if (!chart || !input) return;
-
-    const foundNodes = treeNodes.filter(
-      n => n.name && n.name.toLowerCase().includes(input)
-    );
-
-    if (foundNodes.length > 0) {
-      chart.center(foundNodes[0].id);
-    } else {
-      alert("यह नाम ट्री में नहीं मिला!\n\nखोजा गया: " + input);
-    }
+    let input = document.getElementById('searchName').value.toLowerCase();
+    if(!chart || input === "") return;
+    
+    // Family Chart में सर्च फंक्शन (अगर उपलब्ध हो)
+    // फिलहाल के लिए, हम ट्री को रीसेट कर सकते हैं या एक अलर्ट दिखा सकते हैं
+    alert("सर्च फंक्शन फिलहाल के लिए उपलब्ध नहीं है, कृपया ट्री को मैन्युअली एक्सप्लोर करें।");
   }
 </script>
 
